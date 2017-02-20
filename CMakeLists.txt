@@ -92,12 +92,12 @@ if(NOT UNIX)
 endif()
 
 set(antlr4-parser-GENERATED_SRC
-   ${CMAKE_CURRENT_BINARY_DIR}/generated/PolynomialLexer.cpp 
-   ${CMAKE_CURRENT_BINARY_DIR}/generated/PolynomialParser.cpp
-   ${CMAKE_CURRENT_BINARY_DIR}/generated/PolynomialParserBaseListener.cpp
-   ${CMAKE_CURRENT_BINARY_DIR}/generated/PolynomialParserBaseVisitor.cpp
-   ${CMAKE_CURRENT_BINARY_DIR}/generated/PolynomialParserListener.cpp
-   ${CMAKE_CURRENT_BINARY_DIR}/generated/PolynomialParserVisitor.cpp
+   ${CMAKE_CURRENT_BINARY_DIR}/generated/SerializationLexer.cpp 
+   ${CMAKE_CURRENT_BINARY_DIR}/generated/SerializationParser.cpp
+   ${CMAKE_CURRENT_BINARY_DIR}/generated/SerializationParserBaseListener.cpp
+   ${CMAKE_CURRENT_BINARY_DIR}/generated/SerializationParserBaseVisitor.cpp
+   ${CMAKE_CURRENT_BINARY_DIR}/generated/SerializationParserListener.cpp
+   ${CMAKE_CURRENT_BINARY_DIR}/generated/SerializationParserVisitor.cpp
  )
 
 foreach( src_file ${antlr4-parser-GENERATED_SRC} )
