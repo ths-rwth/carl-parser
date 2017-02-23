@@ -2,11 +2,11 @@
 
 
 #include "./generated/SerializationBaseVisitor.h"
-#include <carl/core/Monomial.h>
-#include <carl/core/VariablePool.h>
-#include <carl/core/Term.h>
-#include <carl/core/MultivariatePolynomial.h>
-#include "Operations.h"
+#include "../../core/Monomial.h"
+#include "../../core/VariablePool.h"
+#include "../../core/Term.h"
+#include "../../core/MultivariatePolynomial.h"
+#include "BenchmarkOperation.h"
 
 
  
@@ -28,7 +28,7 @@ public:
 
 
   virtual antlrcpp::Any visitS(SerializationParser::SContext *ctx) override {
-    return ctx->operation()->accept(this);
+    return ctx->operationList()->accept(this);
   }
 
 
@@ -96,32 +96,31 @@ public:
 
 	if (ctx->monomial().size() > 0) {
 
-		switch(opCodeStrings.at(opcode)) {
-			case OpCode::PLUS: return std::make_tuple<OpTag,Monomial::Arg,Monomial::Arg>(plus_tag(),ctx->monomial(0)->accept(this),ctx->monomial(1)->accept(this)); break;
-			case OpCode::MINUS: return std::make_tuple<OpTag,Monomial::Arg,Monomial::Arg>(minus_tag(),ctx->monomial(0)->accept(this),ctx->monomial(1)->accept(this)); break;
-			case OpCode::MUL: return std::make_tuple<OpTag,Monomial::Arg,Monomial::Arg>(mul_tag(),ctx->monomial(0)->accept(this),ctx->monomial(1)->accept(this)); break;
-			case OpCode::DIV: return std::make_tuple<OpTag,Monomial::Arg,Monomial::Arg>(div_tag(),ctx->monomial(0)->accept(this),ctx->monomial(1)->accept(this)); break;
+		std::vector<Monomial::Arg> monomials;
+		for (int i = 0; i < ctx->monomial().size(); ++i) {
+			std::vector<std::pair<Variable,uint>> content = ctx->monomial(i)->accept(this);
+			monomials.push_back(createMonomial(std::move(content)));
 		}
+		
+		return BenchmarkOperation<Monomial::Arg>(opCodeStrings.at(opcode).first, opCodeStrings.at(opcode).second ,monomials);
 
-	} else if (ctx->term().size() > 0) {
+	} else  if (ctx->term().size() > 0) {
 
-
-		switch(opCodeStrings.at(opcode)) {
-			case OpCode::PLUS: return std::make_tuple<OpTag,Term<mpq_class>,Term<mpq_class>>(plus_tag(),ctx->term(0)->accept(this),ctx->term(1)->accept(this)); break;
-			case OpCode::MINUS: return std::make_tuple<OpTag,Term<mpq_class>,Term<mpq_class>>(minus_tag(),ctx->term(0)->accept(this),ctx->term(1)->accept(this)); break;
-			case OpCode::MUL: return std::make_tuple<OpTag,Term<mpq_class>,Term<mpq_class>>(mul_tag(),ctx->term(0)->accept(this),ctx->term(1)->accept(this)); break;
-			case OpCode::DIV: return std::make_tuple<OpTag,Term<mpq_class>,Term<mpq_class>>(div_tag(),ctx->term(0)->accept(this),ctx->term(1)->accept(this)); break;
+		std::vector<Term<mpq_class>> terms;
+		for (int i = 0; i < ctx->term().size(); ++i) {
+			terms.push_back(ctx->term(i)->accept(this));
 		}
+		
+		return BenchmarkOperation<Term<mpq_class>>(opCodeStrings.at(opcode).first,opCodeStrings.at(opcode).second,terms);
 
 	} else if (ctx->polynomial().size() > 0) {
 
-
-		switch(opCodeStrings.at(opcode)) {
-			case OpCode::PLUS: return std::make_tuple<OpTag,MultivariatePolynomial<mpq_class>,MultivariatePolynomial<mpq_class>>(plus_tag(),ctx->polynomial(0)->accept(this),ctx->polynomial(1)->accept(this)); break;
-			case OpCode::MINUS: return std::make_tuple<OpTag,MultivariatePolynomial<mpq_class>,MultivariatePolynomial<mpq_class>>(minus_tag(),ctx->polynomial(0)->accept(this),ctx->polynomial(1)->accept(this)); break;
-			case OpCode::MUL: return std::make_tuple<OpTag,MultivariatePolynomial<mpq_class>,MultivariatePolynomial<mpq_class>>(mul_tag(),ctx->polynomial(0)->accept(this),ctx->polynomial(1)->accept(this)); break;
-			case OpCode::DIV: return std::make_tuple<OpTag,MultivariatePolynomial<mpq_class>,MultivariatePolynomial<mpq_class>>(div_tag(),ctx->polynomial(0)->accept(this),ctx->polynomial(1)->accept(this)); break;
+		std::vector<MultivariatePolynomial<mpq_class>> polynomials;
+		for (int i = 0; i < ctx->polynomial().size(); ++i) {
+			polynomials.push_back(ctx->polynomial(i)->accept(this));
 		}
+		
+		return BenchmarkOperation<MultivariatePolynomial<mpq_class>>(opCodeStrings.at(opcode).first,opCodeStrings.at(opcode).second,polynomials);
 	} 
 
 	return NULL;
@@ -130,7 +129,16 @@ public:
     
     
 
+  virtual antlrcpp::Any visitOperationList(SerializationParser::OperationListContext *ctx) override {
 
+	//TODO: this should be generic for any operand type!
+	std::vector<BenchmarkOperation<MultivariatePolynomial<mpq_class>>> operationList;
+	for (int i = 0; i < ctx->operation().size(); ++i) {
+		operationList.push_back(ctx->operation(i)->accept(this));
+	}
+	return operationList;
+
+  }
 
 
 private:

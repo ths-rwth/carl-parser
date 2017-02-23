@@ -133,9 +133,9 @@ include_directories(
 
 #file(GLOB antlr4-demo_SRC "${PROJECT_SOURCE_DIR}/demo/generated/*")
 set(antlr4-parser_SRC 
-  ${CMAKE_CURRENT_SOURCE_DIR}/ParserTest.cpp
   ${antlr4-parser-GENERATED_SRC}
   )
+
 
 foreach( src_file ${antlr4-parser_SRC} )
       set_source_files_properties(
@@ -143,7 +143,7 @@ foreach( src_file ${antlr4-parser_SRC} )
           PROPERTIES
           COMPILE_FLAGS -Wno-overloaded-virtual
           )
-endforeach( src_file ${antlr4-parse_SRC} )
+endforeach( src_file ${antlr4-parser_SRC} )
 
 add_custom_target(antlr4-files
           ${antlr4-parser_SRC}

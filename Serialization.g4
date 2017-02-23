@@ -1,6 +1,6 @@
 grammar Serialization;
 
-s : operation EOF ;
+s : operationList EOF ;
 
 
 
@@ -10,6 +10,7 @@ term: RATIONAL monomial;
 polynomial: '[' (term)* ']' ;
 
 operation: '{' ID (',' (monomial|term|polynomial))+ '}' ; 
+operationList : '{' (operation)* '}' ;
 
 
 
