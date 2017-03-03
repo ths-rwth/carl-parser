@@ -9,7 +9,7 @@ monomial: '(' (variable '^' INT)* ')' ;
 term: RATIONAL monomial;
 polynomial: '[' (term)* ']' ;
 
-operation: '{' ID (',' (monomial|term|polynomial))+ '}' ; 
+operation: '{' ID (',' (variable|monomial|term|polynomial))+ '}' ; 
 operationList : '{' (operation)* '}' ;
 
 

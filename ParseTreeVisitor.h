@@ -87,43 +87,45 @@ public:
   }
     
 
+
+
   virtual antlrcpp::Any visitOperation(SerializationParser::OperationContext *ctx) override {
 
     std::string opcode = ctx->ID()->getSymbol()->getText();
 
-//we assume for now there are no operators with mixed operand types:
-//determine the type we have here:
+//we always return operands in an ordered fashion, from low to high complexity (rational to polynomial)
 
-	if (ctx->monomial().size() > 0) {
+	std::vector<OperandVariant> operands;
 
-		std::vector<Monomial::Arg> monomials;
-		for (int i = 0; i < ctx->monomial().size(); ++i) {
-			std::vector<std::pair<Variable,uint>> content = ctx->monomial(i)->accept(this);
-			monomials.push_back(createMonomial(std::move(content)));
+	if (ctx->variable().size() > 0) {
+		for (int i = 0; i < ctx->variable().size(); ++i) {
+			Variable variable = ctx->variable(i)->accept(this);
+			operands.push_back(variable);
 		}
-		
-		return BenchmarkOperation<Monomial::Arg>(opCodeStrings.at(opcode).first, opCodeStrings.at(opcode).second ,monomials);
-
-	} else  if (ctx->term().size() > 0) {
-
-		std::vector<Term<mpq_class>> terms;
-		for (int i = 0; i < ctx->term().size(); ++i) {
-			terms.push_back(ctx->term(i)->accept(this));
-		}
-		
-		return BenchmarkOperation<Term<mpq_class>>(opCodeStrings.at(opcode).first,opCodeStrings.at(opcode).second,terms);
-
-	} else if (ctx->polynomial().size() > 0) {
-
-		std::vector<MultivariatePolynomial<mpq_class>> polynomials;
-		for (int i = 0; i < ctx->polynomial().size(); ++i) {
-			polynomials.push_back(ctx->polynomial(i)->accept(this));
-		}
-		
-		return BenchmarkOperation<MultivariatePolynomial<mpq_class>>(opCodeStrings.at(opcode).first,opCodeStrings.at(opcode).second,polynomials);
 	} 
 
-	return NULL;
+	if (ctx->monomial().size() > 0) {
+		for (int i = 0; i < ctx->monomial().size(); ++i) {
+			std::vector<std::pair<Variable,uint>> content = ctx->monomial(i)->accept(this);
+			operands.push_back(createMonomial(std::move(content)));
+		}
+	} 
+
+	if (ctx->term().size() > 0) {
+		for (int i = 0; i < ctx->term().size(); ++i) {
+			Term<mpq_class> term = ctx->term(i)->accept(this);
+			operands.push_back(term);
+		}
+	} 
+	
+	if (ctx->polynomial().size() > 0) {
+		for (int i = 0; i < ctx->polynomial().size(); ++i) {
+			MultivariatePolynomial<mpq_class> poly = ctx->polynomial(i)->accept(this);
+			operands.push_back(poly);
+		}
+	} 
+
+	return BenchmarkOperation(opCodeStrings.at(opcode).first,opCodeStrings.at(opcode).second,operands);
 
   }
     
@@ -131,8 +133,7 @@ public:
 
   virtual antlrcpp::Any visitOperationList(SerializationParser::OperationListContext *ctx) override {
 
-	//TODO: this should be generic for any operand type!
-	std::vector<BenchmarkOperation<MultivariatePolynomial<mpq_class>>> operationList;
+	std::vector<BenchmarkOperation> operationList;
 	for (int i = 0; i < ctx->operation().size(); ++i) {
 		operationList.push_back(ctx->operation(i)->accept(this));
 	}
