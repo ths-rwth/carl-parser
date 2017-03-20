@@ -2,6 +2,12 @@
 #pragma once
 
 
+
+#include "../../core/Monomial.h"
+#include "../../core/MultivariatePolynomial.h"
+#include "../../core/Term.h"
+#include "../../core/Variable.h"
+
 #include "Operations.h"
 #include <vector>
 #include <boost/variant.hpp>
@@ -288,16 +294,43 @@ struct OperationExecutor : public boost::static_visitor<> {
   }
 
 
+/*
+struct OperationSerializer : public boost::static_visitor<> {
+
+
+  template <typename T1, typename T2, typename R>
+  void operator()(plus_tag& tag, T1& op1, T2& op2, R& result) const {
+  }
+
+  template <typename T1, typename T2, typename R>
+  void operator()(minus_tag& tag, T1& op1, T2& op2, R& result) const {
+  }
+
+
+  template<typename T1,typename T2, typename R>
+  void operator()(mul_tag& tag, T1& op1, T2& op2, R& result) const {
+  }
+
+  template<typename T1,typename T2, typename R>
+  void operator()(div_tag& tag, T1& op1, T2& op2, R& result) const {
+  }
+
+
+};
+ */
+
 
 
 
 class BenchmarkOperation {
 private:
   OperationTuple mData;
+  //OpCode mOpCode;
 public:
 
   BenchmarkOperation(const OpCode& opCode, const int& arity, const std::vector<OperandVariant>& operandsAndResult) {
 	
+	//mOpCode = opCode;
 	//boost::optional<OperandVariant> expectedResult;
 	//if (operandsAndResult.size() > arity) {
 	OperandVariant	expectedResult = operandsAndResult[arity];
@@ -314,7 +347,24 @@ public:
 	}
 
   }
-	
+
+ /* OperationTuple getOperationTuple() const {
+	return mData;
+  } */
+
+
+/*  std::string serialize() {
+
+	switch (mOpCode) {
+			case OpCode::PLUS: *this << "PLUS"; write(std::get<1>(tuple)); write(std::get<2>(tuple)); break;
+			case OpCode::MINUS: *this << "MINUS"; write(std::get<1>(tuple)); write(std::get<2>(tuple)); break;
+			case OpCode::MUL *this << "MUL"; write(std::get<1>(tuple)); write(std::get<2>(tuple)); break;
+			case OpCode::DIV: *this << "DIV"; write(std::get<1>(tuple)); write(std::get<2>(tuple)); break;
+		} 
+
+
+
+  } */
 
 
   void execute() {
