@@ -100,10 +100,10 @@ public:
 
 		*this << "{";
 		switch (opCode) {
-			case OpCode::PLUS: *this << "PLUS"; write(op1); write(op2); break;
-			case OpCode::MINUS: *this << "MINUS"; write(op1); write(op2); break;
-			case OpCode::MUL: *this << "MUL"; write(op1); write(op2); break;
-			case OpCode::DIV: *this << "DIV"; write(op1); write(op2); break;
+			case OpCode::PLUS: *this << "PLUS"; *this << ","; write(op1); *this << ","; write(op2); break;
+			case OpCode::MINUS: *this << "MINUS"; *this << ","; write(op1); *this << ","; write(op2); break;
+			case OpCode::MUL: *this << "MUL"; *this << ","; write(op1); *this << ","; write(op2); break;
+			case OpCode::DIV: *this << "DIV"; *this << ","; write(op1); *this << ","; write(op2); break;
 		} 
 		*this << "}";
 
