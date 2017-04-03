@@ -22,20 +22,7 @@ namespace carl {
 
 
 
-
-template <typename T1,typename T2,typename R>
-using PlusOperation = std::tuple<plus_tag, T1, T2,boost::optional<R>>;
-
-template<typename T1,typename T2,typename R>
-using MinusOperation = std::tuple<minus_tag, T1, T2,boost::optional<R>>;
-
-template<typename T1,typename T2,typename R>
-using MulOperation = std::tuple<mul_tag, T1,T2, boost::optional<R>>;
-
-template<typename T1,typename T2,typename R>
-using DivOperation = std::tuple<div_tag, T1,T2, boost::optional<R>>;
-
-
+//TODO: extend this to all kinds of coefficients, not only mpq_class
 typedef MultivariatePolynomial<mpq_class> Poly;
 typedef Term<mpq_class> TermType;
 

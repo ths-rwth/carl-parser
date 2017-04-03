@@ -10,16 +10,22 @@
 #include <sstream>
 #include <type_traits>
 
+#include "BenchmarkOperation.h"
+
 namespace carl {
 
-class SerializationStream {
+
+
+
+
+class SerializationStream : public boost::static_visitor<> {
 private:
 	std::stringstream mStream;
 	
 
 
 	void write(const Monomial::Arg& m) {
-		if (m) *this << *m;
+		if (m) write(*m);
 		else *this << "()";
 	}
 	
@@ -58,7 +64,7 @@ private:
 
 	template<typename Coeff>
 	void write(const Term<Coeff>& t) {
-		write(t.coeff());
+		write<Coeff>(t.coeff());
 		write(t.monomial());
 	}
 	
@@ -68,11 +74,19 @@ private:
 		*this << v.getName();
 	}
 
+	template<typename Coeff>
+	void write(const Coeff& c) {
+		mStream << c;
+	}
+
+
+
 	
 	template<typename T>
 	void write(T&& t) {
 		mStream << t;
 	}
+
 
 
 	
@@ -100,15 +114,49 @@ public:
 
 		*this << "{";
 		switch (opCode) {
-			case OpCode::PLUS: *this << "PLUS"; *this << ","; write(op1); *this << ","; write(op2); break;
-			case OpCode::MINUS: *this << "MINUS"; *this << ","; write(op1); *this << ","; write(op2); break;
-			case OpCode::MUL: *this << "MUL"; *this << ","; write(op1); *this << ","; write(op2); break;
-			case OpCode::DIV: *this << "DIV"; *this << ","; write(op1); *this << ","; write(op2); break;
+			case OpCode::PLUS: *this << "PLUS"; *this << ","; boost::apply_visitor(*this,op1); *this << ","; boost::apply_visitor(*this,op2); *this << ","; boost::apply_visitor(*this,result); break;
+			case OpCode::MINUS: *this << "MINUS"; *this << ","; boost::apply_visitor(*this,op1); *this << ","; boost::apply_visitor(*this,op2); *this << ","; boost::apply_visitor(*this,result); break;
+			case OpCode::MUL: *this << "MUL"; *this << ","; boost::apply_visitor(*this,op1); *this << ","; boost::apply_visitor(*this,op2); *this << ","; boost::apply_visitor(*this,result); break;
+			case OpCode::DIV: *this << "DIV"; *this << ","; boost::apply_visitor(*this,op1); *this << ","; boost::apply_visitor(*this,op2); *this << ","; boost::apply_visitor(*this,result); break;
 		} 
 		*this << "}";
 
 	}
+
+
+
+    void operator()(const Poly& x) 
+    {
+       write<mpq_class>(x);
+    }
+    
+    void operator()(const TermType& x) 
+    {
+        write(x);
+    }
+
+    void operator()(const Monomial::Arg& x) 
+    {
+        write(x);
+    }
+
+    void operator()(const Variable& x) 
+    {
+        write(x);
+    }
 };
+
+
+	template<>
+	void SerializationStream::write<mpq_class>(const mpq_class& c) {
+		mStream << c;
+		if (carl::isInteger(c)) {
+			mStream << "/1";
+		} 
+	}
+
+
+
 
 std::ostream& operator<<(std::ostream& os, const SerializationStream& ss) {
 	return os << ss.content();

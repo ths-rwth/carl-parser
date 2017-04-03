@@ -10,11 +10,11 @@ term: RATIONAL monomial;
 polynomial: '[' (term)* ']' ;
 
 operation: '{' ID (',' (variable|monomial|term|polynomial))+ '}' ; 
-operationList : '{' (operation)* '}' ;
+operationList :  (operation)*  ;
 
 
 
 INT     : [0-9]+ ;
 RATIONAL:  ('-')? INT '/' INT ;
 ID : [a-zA-Z] [a-zA-Z0-9]* ;
-
+NEWLINE: ('\r')? '\n' {skip();} ;
