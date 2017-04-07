@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "./generated/SerializationBaseVisitor.h"
+#include <carl/io/serialization/SerializationBaseVisitor.h>
 #include "../../core/Monomial.h"
 #include "../../core/VariablePool.h"
 #include "../../core/Term.h"
