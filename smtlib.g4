@@ -2,7 +2,7 @@
  * Grammar based on the SMTLIB 2.5 standard.
  */
 
-grammar SMTLib;
+grammar smtlib;
 
 /**
  * 3.2 S-expr
@@ -30,8 +30,8 @@ sort : identifier | LPAREN  identifier sort+ RPAREN;
  * 3.6 Terms
  */
 qual_identifier : identifier | LPAREN AS identifier sort RPAREN;
-var_binding : LPAREN symbol term RPAREN;
-sorted_var : LPAREN symbol sort RPAREN;
+var_binding : LPAREN SYMBOL term RPAREN;
+sorted_var : LPAREN SYMBOL sort RPAREN;
 term : spec_constant | qual_identifier
     | LPAREN qual_identifier term+ RPAREN
     | LPAREN LET LPAREN var_binding+ RPAREN RPAREN
@@ -53,7 +53,7 @@ par_fun_symbol_decl : fun_symbol_decl
     | LPAREN PAR LPAREN SYMBOL+ RPAREN
         LPAREN identifier sort+ attribute* RPAREN RPAREN;
 theory_attribute : attribute;
-theory_decl : LPAREN 'theory' symbol theory_attribute+ RPAREN;
+theory_decl : LPAREN 'theory' SYMBOL theory_attribute+ RPAREN;
 
 /**
  * 3.1 Predefined tokens
