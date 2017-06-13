@@ -12,31 +12,30 @@ grammar Serialization;
 ///////////////////////////////
 start : form_expr EOF ;
 
-form_expr : LPAREN form_expr RPAREN | form_expr_body;
-form_expr_body
+form_expr
     : formula_nary
     | formula_unary
     | constraint
-    | arith_expr_body
-    | atom
+    | arith_expr
     ;
 
-formula_nary : form_op_nary form_expr+;
+formula_nary : LPAREN form_op_nary form_expr+ RPAREN;
 form_op_nary : 'and' | 'or' | '=' | 'xor' | '=>' | 'ite';
 
-formula_unary : 'not' form_expr;
+formula_unary : LPAREN 'not' form_expr RPAREN;
 
-constraint : relation arith_expr_body '0';
+constraint : LPAREN relation arith_expr '0' RPAREN;
 // NEQ not directly written ( is not = )
 relation : '=' | '<' | '<=' | '>' | '>=';
 
-arith_expr : LPAREN arith_expr RPAREN | arith_expr_body;
-arith_expr_body
-    : ('+' | '-' | '*' | '/') arith_expr+
+arith_expr
+    : arith_nary
     | atom
     ;
 
-atom : 'true' | 'false' | number | variable;
+arith_nary : LPAREN token=('+' | '-' | '*' | '/') arith_expr+ RPAREN;
+
+atom : TRUE | FALSE | number | variable;
 number : NUMERAL | DECIMAL | HEXADECIMAL | BINARY;
 variable : SYMBOL;
 
@@ -63,9 +62,12 @@ EXISTS : 'exists';
 FORALL : 'forall';
 PAR : 'par';
 
+TRUE : 'true';
+FALSE: 'false';
+
 fragment DIGIT : [0-9];
 fragment LETTER : [A-Za-z];
-NUMERAL : '0' | [1-9]DIGIT*;
+NUMERAL : '0' | ([1-9]DIGIT*);
 DECIMAL : NUMERAL '.' DIGIT+;
 HEXADECIMAL : '#x' [0-9A-Fa-f]+;
 BINARY: '#b' [0-1]+;
