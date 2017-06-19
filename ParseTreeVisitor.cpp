@@ -4,144 +4,144 @@
 
 namespace carl {
 
-	template<typename Res>
+	template<typename Res, typename Pol>
 	class perform_addition: public boost::static_visitor<Res> {
 	public:
 		template<typename T, typename U>
-		ArithType  operator()(const T& lhs, const U& rhs) const {
-			return Poly(lhs) + Poly(rhs);
+		Res operator()(const T& lhs, const U& rhs) const {
+			return Pol(lhs) + Pol(rhs);
 		}
 
-		ArithType  operator()(const CoeffType& lhs, const CoeffType& rhs) const {
+		Res operator()(const typename Pol::CoeffType& lhs, const typename Pol::CoeffType& rhs) const {
 			return (lhs) + (rhs);
 		}
 
-		ArithType  operator()(const RationalFunction<Poly>& lhs, const Monomial::Arg& rhs) const {
-			return (lhs) + Poly(rhs);
+		Res operator()(const RationalFunction<Pol>& lhs, const Monomial::Arg& rhs) const {
+			return (lhs) + Pol(rhs);
 		}
 
-		ArithType  operator()(const RationalFunction<Poly>& lhs, const Term<CoeffType>& rhs) const {
-			return (lhs) + Poly(rhs);
+		Res operator()(const RationalFunction<Pol>& lhs, const Term<typename Pol::CoeffType>& rhs) const {
+			return (lhs) + Pol(rhs);
 		}
 
 		template<typename T>
-		ArithType operator()(const RationalFunction<Poly>& lhs, const T& rhs) const {
+		Res operator()(const RationalFunction<Pol>& lhs, const T& rhs) const {
 			return (lhs) + (rhs);
 		}
 
 		template<typename T>
-		ArithType operator()(const T& lhs, const RationalFunction<Poly>& rhs) const {
-			return (rhs) + Poly(lhs);
+		Res operator()(const T& lhs, const RationalFunction<Pol>& rhs) const {
+			return (rhs) + Pol(lhs);
 		}
 
-		ArithType  operator()(const RationalFunction<Poly>& lhs, const RationalFunction<Poly>& rhs) const {
+		Res operator()(const RationalFunction<Pol>& lhs, const RationalFunction<Pol>& rhs) const {
 			return (lhs) + (rhs);
 		}
 	};
 
-	template<typename Res>
+	template<typename Res, typename Pol>
 	class perform_subtraction: public boost::static_visitor<Res> {
 	public:
 		template<typename T, typename U>
-		ArithType  operator()(const T& lhs, const U& rhs) const {
-			return Poly(lhs) - Poly(rhs);
+		Res operator()(const T& lhs, const U& rhs) const {
+			return Pol(lhs) - Pol(rhs);
 		}
 
-		ArithType  operator()(const CoeffType& lhs, const CoeffType& rhs) const {
+		Res operator()(const typename Pol::CoeffType& lhs, const typename Pol::CoeffType& rhs) const {
 			return (lhs) - (rhs);
 		}
 
-		ArithType  operator()(const RationalFunction<Poly>& lhs, const Monomial::Arg& rhs) const {
-			return (lhs) - Poly(rhs);
+		Res operator()(const RationalFunction<Pol>& lhs, const Monomial::Arg& rhs) const {
+			return (lhs) - Pol(rhs);
 		}
 
-		ArithType  operator()(const RationalFunction<Poly>& lhs, const Term<CoeffType>& rhs) const {
-			return (lhs) - Poly(rhs);
+		Res operator()(const RationalFunction<Pol>& lhs, const Term<typename Pol::CoeffType>& rhs) const {
+			return (lhs) - Pol(rhs);
 		}
 
 		template<typename T>
-		ArithType operator()(const RationalFunction<Poly>& lhs, const T& rhs) const {
+		Res operator()(const RationalFunction<Pol>& lhs, const T& rhs) const {
 			return (lhs) - (rhs);
 		}
 
 		template<typename T>
-		ArithType operator()(const T& lhs, const RationalFunction<Poly>& rhs) const {
-			return (rhs) - Poly(lhs);
+		Res operator()(const T& lhs, const RationalFunction<Pol>& rhs) const {
+			return (rhs) - Pol(lhs);
 		}
 
-		ArithType operator()(const RationalFunction<Poly>& lhs, const RationalFunction<Poly>& rhs) const {
+		Res operator()(const RationalFunction<Pol>& lhs, const RationalFunction<Pol>& rhs) const {
 			return (lhs) - (rhs);
 		}
 	};
 
-	template<typename Res>
+	template<typename Res, typename Pol>
 	class perform_multiplication: public boost::static_visitor<Res> {
 	public:
 		template<typename T, typename U>
-		ArithType operator()(const T& lhs, const U& rhs) const {
+		Res operator()(const T& lhs, const U& rhs) const {
 			return lhs * rhs;
 		}
 
 		template<typename T>
-		ArithType operator()(const T& lhs, const RationalFunction<Poly>& rhs) const {
+		Res operator()(const T& lhs, const RationalFunction<Pol>& rhs) const {
 			return rhs * lhs;
 		}
 
-		ArithType  operator()(const RationalFunction<Poly>& lhs, const Monomial::Arg& rhs) const {
-			return (lhs) * Poly(rhs);
+		Res operator()(const RationalFunction<Pol>& lhs, const Monomial::Arg& rhs) const {
+			return (lhs) * Pol(rhs);
 		}
 
-		ArithType  operator()(const RationalFunction<Poly>& lhs, const Term<CoeffType>& rhs) const {
-			return (lhs) * Poly(rhs);
+		Res operator()(const RationalFunction<Pol>& lhs, const Term<typename Pol::CoeffType>& rhs) const {
+			return (lhs) * Pol(rhs);
 		}
 
-		ArithType  operator()(const Monomial::Arg& lhs, const RationalFunction<Poly>& rhs) const {
-			return (rhs) * Poly(lhs);
+		Res operator()(const Monomial::Arg& lhs, const RationalFunction<Pol>& rhs) const {
+			return (rhs) * Pol(lhs);
 		}
 
-		ArithType  operator()(const Term<CoeffType>& lhs, const RationalFunction<Poly>& rhs) const {
-			return (rhs) * Poly(lhs);
+		Res operator()(const Term<typename Pol::CoeffType>& lhs, const RationalFunction<Pol>& rhs) const {
+			return (rhs) * Pol(lhs);
 		}
 	};
 
-	template<typename Res>
+	template<typename Res, typename Pol>
 	class perform_division: public boost::static_visitor<Res> {
 	public:
-		ArithType  operator()(const RationalFunction<Poly>& lhs, const CoeffType& rhs) const {
+		Res operator()(const RationalFunction<Pol>& lhs, const typename Pol::CoeffType& rhs) const {
 			return lhs / rhs;
 		}
 
 		template<typename T>
-		ArithType operator()(const RationalFunction<Poly>& lhs, const T& rhs) const {
+		Res operator()(const RationalFunction<Pol>& lhs, const T& rhs) const {
 			return lhs / rhs;
 		}
 
-		ArithType  operator()(const RationalFunction<Poly>& lhs, const Monomial::Arg& rhs) const {
-			return lhs / Poly(rhs);
+		Res operator()(const RationalFunction<Pol>& lhs, const Monomial::Arg& rhs) const {
+			return lhs / Pol(rhs);
 		}
 
-		ArithType  operator()(const RationalFunction<Poly>& lhs, const Term<CoeffType>& rhs) const {
-			return lhs / Poly(rhs);
+		Res operator()(const RationalFunction<Pol>& lhs, const Term<typename Pol::CoeffType>& rhs) const {
+			return lhs / Pol(rhs);
 		}
 
-		ArithType  operator()(const RationalFunction<Poly>& lhs, const RationalFunction<Poly>& rhs) const {
+		Res operator()(const RationalFunction<Pol>& lhs, const RationalFunction<Pol>& rhs) const {
 			return lhs / rhs;
 		}
 
 		template<typename T>
-		ArithType operator()(const T& lhs, const CoeffType& coeff) const {
+		Res operator()(const T& lhs, const typename Pol::CoeffType& coeff) const {
 			return lhs * reciprocal(coeff);
 		}
 
 		template<typename T>
-		ArithType operator()(const T& lhs, const RationalFunction<Poly>& rhs) const {
+		Res operator()(const T& lhs, const RationalFunction<Pol>& rhs) const {
 			// TODO: Not extremely efficient probably
-			return  RationalFunction<Poly>(rhs.denominator(), rhs.nominator()) * Poly(lhs);
+			return  RationalFunction<Pol>(rhs.denominator(), rhs.nominator()) * Pol(lhs);
 		}
 
 		template<typename T, typename U>
-		ArithType operator()(const T& lhs, const U& rhs) const {
-			return RationalFunction<Poly>(Poly(lhs), Poly(rhs));
+		Res operator()(const T& lhs, const U& rhs) const {
+			return RationalFunction<Pol>(Pol(lhs), Pol(rhs));
 		}
 	};
 
@@ -174,12 +174,12 @@ namespace carl {
 	};
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor::visitStart(SerializationParser::StartContext *ctx) {
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitStart(SerializationParser::StartContext *ctx) {
 		return ctx->carl_expr()->accept(this);
 	}
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor::visitCarl_expr(SerializationParser::Carl_exprContext *ctx) {
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitCarl_expr(SerializationParser::Carl_exprContext *ctx) {
 		if (ctx->formula_nary()) {
 			return ctx->formula_nary()->accept(this);
 		} else if (ctx->formula_unary()) {
@@ -187,25 +187,25 @@ namespace carl {
 		} else if (ctx->constraint()) {
 			return ctx->constraint()->accept(this);
 		} else if (ctx->arith_nary()) {
-			return boost::apply_visitor(to_antlr_any(), ctx->arith_nary()->accept(this).as<ArithType>());
+			return boost::apply_visitor(to_antlr_any(), ctx->arith_nary()->accept(this).template as<ArithType>());
 		} else if (ctx->real_variable()) {
-			return boost::apply_visitor(to_antlr_any(), ctx->real_variable()->accept(this).as<ArithType>());
+			return boost::apply_visitor(to_antlr_any(), ctx->real_variable()->accept(this).template as<ArithType>());
 		} else if (ctx->number()) {
-			return boost::apply_visitor(to_antlr_any(), ctx->number()->accept(this).as<ArithType>());
+			return boost::apply_visitor(to_antlr_any(), ctx->number()->accept(this).template as<ArithType>());
 		} else if (ctx->boolean()) {
-			return ctx->boolean()->accept(this).as<Formula<Pol>>();
+			return ctx->boolean()->accept(this).template as<Formula<Pol>>();
 		}
 		throw std::runtime_error("Unknown formula rule");
 	}
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor::visitForm_expr(SerializationParser::Form_exprContext *ctx) {
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitForm_expr(SerializationParser::Form_exprContext *ctx) {
 		if (ctx->formula_nary()) {
 			return ctx->formula_nary()->accept(this);
 		} else if (ctx->formula_unary()) {
 			return ctx->formula_unary()->accept(this);
 		} else if (ctx->constraint()) {
-			return Formula<Pol>(ctx->constraint()->accept(this).as<Constraint<Pol>>());
+			return Formula<Pol>(ctx->constraint()->accept(this).template as<Constraint<Pol>>());
 		} else if (ctx->boolean()) {
 			return ctx->boolean()->accept(this);
 		} else if (ctx->bool_variable()) {
@@ -215,34 +215,34 @@ namespace carl {
 	}
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor::visitFormula_nary(SerializationParser::Formula_naryContext *ctx) {
-		FormulaType type = ctx->form_op_nary()->accept(this).as<FormulaType>();
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitFormula_nary(SerializationParser::Formula_naryContext *ctx) {
+		FormulaType type = ctx->form_op_nary()->accept(this).template as<FormulaType>();
 		if (type == FormulaType::ITE) {
 			if (ctx->form_expr().size() != 3) {
 				throw std::runtime_error("ITE formula requires 3 subformulae");
 			}
-			return Formula<Pol>(type, ctx->form_expr(0)->accept(this).as<Formula<Pol>>(),
-			               ctx->form_expr(1)->accept(this).as<Formula<Pol>>(),
-			               ctx->form_expr(2)->accept(this).as<Formula<Pol>>());
+			return Formula<Pol>(type, ctx->form_expr(0)->accept(this).template as<Formula<Pol>>(),
+			               ctx->form_expr(1)->accept(this).template as<Formula<Pol>>(),
+			               ctx->form_expr(2)->accept(this).template as<Formula<Pol>>());
 		} else {
 			if (ctx->form_expr().size() < 2) {
 				if (type != FormulaType::AND && type != FormulaType::OR) {
 					throw std::runtime_error("formula requires >1 subformulae");
 				}
-				return ctx->form_expr(0)->accept(this).as<Formula<Pol>>();
+				return ctx->form_expr(0)->accept(this).template as<Formula<Pol>>();
 			}
 			size_t index = 0;
-			Formula<Pol> form = ctx->form_expr(index)->accept(this).as<Formula<Pol>>();
+			Formula<Pol> form = ctx->form_expr(index)->accept(this).template as<Formula<Pol>>();
 			++index;
 			for(; index < ctx->form_expr().size(); ++index) {
-				form = Formula<Pol>(type, form, ctx->form_expr(index)->accept(this).as<Formula<Pol>>());
+				form = Formula<Pol>(type, form, ctx->form_expr(index)->accept(this).template as<Formula<Pol>>());
 			}
 			return form;
 		}
 	}
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor::visitForm_op_nary(SerializationParser::Form_op_naryContext *ctx) {
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitForm_op_nary(SerializationParser::Form_op_naryContext *ctx) {
 		auto const& text = ctx->getText();
 		if (text == "and") {
 			return FormulaType::AND;
@@ -261,16 +261,16 @@ namespace carl {
 	}
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor::visitFormula_unary(SerializationParser::Formula_unaryContext *ctx) {
-		auto formula = ctx->form_expr()->accept(this).as<Formula<Pol>>();
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitFormula_unary(SerializationParser::Formula_unaryContext *ctx) {
+		auto formula = ctx->form_expr()->accept(this).template as<Formula<Pol>>();
 		return Formula<Pol>(FormulaType::NOT, formula);
 	}
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor::visitConstraint(SerializationParser::ConstraintContext *ctx) {
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitConstraint(SerializationParser::ConstraintContext *ctx) {
 		auto const& text = ctx->token->getText();
 		antlrcpp::Any expr = ctx->arith_expr()->accept(this);
-		auto arith_expr = expr.as<ArithType>();
+		auto arith_expr = expr.template as<ArithType>();
 		if (text == "=") {
 			return boost::apply_visitor(make_constraint<Pol>(Relation::EQ), arith_expr);
 		} else if (text == "!=") {
@@ -289,7 +289,7 @@ namespace carl {
 	}
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor::visitArith_expr(SerializationParser::Arith_exprContext *ctx) {
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitArith_expr(SerializationParser::Arith_exprContext *ctx) {
 		if (ctx->arith_nary()) {
 			return ctx->arith_nary()->accept(this);
 		} else if (ctx->number()) {
@@ -301,28 +301,28 @@ namespace carl {
 	}
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor::visitArith_nary(carl::SerializationParser::Arith_naryContext *ctx) {
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitArith_nary(carl::SerializationParser::Arith_naryContext *ctx) {
 		auto const& text = ctx->token->getText();
-		auto baseExpr = ctx->arith_expr(0)->accept(this).as<ArithType>();
+		auto baseExpr = ctx->arith_expr(0)->accept(this).template as<ArithType>();
 		if (text == "+") {
 			for(size_t i = 1; i < ctx->arith_expr().size(); ++i) {
-				auto nextExpr = ctx->arith_expr(i)->accept(this).as<ArithType>();
-				baseExpr = boost::apply_visitor(perform_addition<ArithType>(), baseExpr, nextExpr);
+				auto nextExpr = ctx->arith_expr(i)->accept(this).template as<ArithType>();
+				baseExpr = boost::apply_visitor(perform_addition<ArithType, Pol>(), baseExpr, nextExpr);
 			}
 		} else if (text == "-") {
 			for(size_t i = 1; i < ctx->arith_expr().size(); ++i) {
 				auto nextExpr = ctx->arith_expr(i)->accept(this);
-				baseExpr = boost::apply_visitor(perform_subtraction<ArithType>(), baseExpr, nextExpr.as<ArithType>());
+				baseExpr = boost::apply_visitor(perform_subtraction<ArithType, Pol>(), baseExpr, nextExpr.template as<ArithType>());
 			}
 		} else if (text == "*") {
 			for(size_t i = 1; i < ctx->arith_expr().size(); ++i) {
 				auto nextExpr = ctx->arith_expr(i)->accept(this);
-				baseExpr = boost::apply_visitor(perform_multiplication<ArithType>(), baseExpr, nextExpr.as<ArithType>());
+				baseExpr = boost::apply_visitor(perform_multiplication<ArithType, Pol>(), baseExpr, nextExpr.template as<ArithType>());
 			}
 		} else if (text == "/") {
 			for(size_t i = 1; i < ctx->arith_expr().size(); ++i) {
 				auto nextExpr = ctx->arith_expr(i)->accept(this);
-				baseExpr = boost::apply_visitor(perform_division<ArithType>(), baseExpr, nextExpr.as<ArithType>());
+				baseExpr = boost::apply_visitor(perform_division<ArithType, Pol>(), baseExpr, nextExpr.template as<ArithType>());
 			}
 		} else {
 			throw std::runtime_error("Unknown arithmetic operator");
@@ -331,7 +331,7 @@ namespace carl {
 	}
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor::visitBoolean(SerializationParser::BooleanContext *ctx) {
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitBoolean(SerializationParser::BooleanContext *ctx) {
 		if (ctx->TRUE()) {
 			return carl::Formula<Pol>(FormulaType::TRUE);
 		} else if (ctx->FALSE()) {
@@ -341,7 +341,7 @@ namespace carl {
 	}
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor::visitNumber(SerializationParser::NumberContext *ctx) {
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitNumber(SerializationParser::NumberContext *ctx) {
 		Rational tmp;
 		if (ctx->NUMERAL()) {
 			bool suc = carl::try_parse<Rational>(ctx->NUMERAL()->getText(), tmp);
@@ -368,7 +368,7 @@ namespace carl {
 	}
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor::visitBool_variable(SerializationParser::Bool_variableContext *ctx) {
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitBool_variable(SerializationParser::Bool_variableContext *ctx) {
 		std::string name = ctx->SYMBOL()->getSymbol()->getText();
 		//try and generate new variable from pool
 		Variable newVar;
@@ -387,7 +387,7 @@ namespace carl {
 	}
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor::visitReal_variable(SerializationParser::Real_variableContext *ctx) {
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitReal_variable(SerializationParser::Real_variableContext *ctx) {
 		std::string name = ctx->SYMBOL()->getSymbol()->getText();
 		//try and generate new variable from pool
 		Variable newVar;
@@ -404,4 +404,7 @@ namespace carl {
 
 		return ArithType(newVar);
 	}
+
+	template
+	class ParseTreeVisitor<MultivariatePolynomial<mpq_class>>;
 }

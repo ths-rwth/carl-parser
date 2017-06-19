@@ -18,11 +18,19 @@ std::string serialize(Variable const& v) {
 	return v.getName();
 }
 
-//std::string serialize(mpq_class const& rational);
+std::string serialize(mpq_class const& rational) {
+	return toString(rational);
+}
 
 //std::string serialize(cln::RA const& rational);
 
 std::string serialize(Monomial::Arg const& v) {
+	if (v->isConstant()) {
+		return "0";
+	} else if (v->isLinear()) {
+		return serialize(v->getSingleVariable());
+	}
+
 	std::string res = "(*";
 	for(auto const& exp: *v) {
 		for(uint i = 0; i < exp.second; ++i) {
@@ -38,7 +46,7 @@ std::string serialize(Term<CoeffType> const& t) {
 	if (carl::isOne(t.coeff())) {
 		return serialize(t.monomial());
 	} else {
-		std::string res = "(* " + serialize(t.coeff());
+		std::string res = "(*" + serialize(t.coeff());
 		for(auto const& exp: *t.monomial()) {
 			for(uint i = 0; i < exp.second; ++i) {
 				res += ' ' + exp.first.getName();
@@ -53,12 +61,15 @@ template <typename CoeffType>
 std::string serialize(MultivariatePolynomial<CoeffType> const& poly) {
 	if (poly.isConstant()) {
 		return serialize(poly.constantPart());
+	} else if (poly.nrTerms() == 1) {
+		return serialize(*poly.begin());
 	} else {
-		std::string res = "(+ ";
+		std::string res = "(+";
 		for(auto const& term: poly) {
-			res += serialize(term);
+			res += ' ' + serialize(term);
 		}
 		res += ")";
+		return res;
 	}
 }
 
@@ -90,13 +101,14 @@ std::string serialize(Formula<Poly> const& f) {
 		case FormulaType::AND:
 		case FormulaType::OR:
 		case FormulaType::XOR:
-		case FormulaType::IFF:
+		case FormulaType::IFF: {
 			std::string res = "(" + formulaTypeToString(f.getType());
-			for(auto const& sub: f) {
+			for (auto const &sub: f) {
 				res += ' ' + serialize(sub);
 			}
 			res += ')';
 			return res;
+		}
 		case FormulaType::CONSTRAINT:
 			return serialize(f.constraint());
 		default:
