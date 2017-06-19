@@ -407,4 +407,17 @@ namespace carl {
 
 	template
 	class ParseTreeVisitor<MultivariatePolynomial<mpq_class>>;
+#ifdef USE_CLN_NUMBERS
+	template
+	class ParseTreeVisitor<MultivariatePolynomial<cln::cl_RA>>;
+#endif
+#ifdef USE_MPFR_FLOAT
+	template
+	class ParseTreeVisitor<MultivariatePolynomial<FLOAT_T<mpfr_t>>>;
+#endif
+#ifdef USE_Z3_NUMBERS
+	template
+	class ParseTreeVisitor<MultivariatePolynomial<rational>>;
+#endif
+
 }
