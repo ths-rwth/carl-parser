@@ -1,6 +1,10 @@
 #pragma once
 
 #include <carl/io/serialization/SerializationVisitor.h>
+#include <carl/core/MultivariatePolynomial.h>
+#include <carl/core/RationalFunction.h>
+
+#include <boost/variant.hpp>
 
 namespace carl {
 
@@ -8,7 +12,13 @@ namespace carl {
 	 * Visitor for the Serialization grammar that will build
 	 * up the CARL data.
 	 */
+	template<typename Pol>
 	class ParseTreeVisitor : public SerializationVisitor {
+		typedef typename Pol::CoeffType Rational;
+
+		using ArithType = boost::variant<Rational, carl::Variable, carl::Monomial::Arg,
+				carl::Term<Rational>, Pol, RationalFunction<Pol> >;
+
 	public:
 		antlrcpp::Any visitStart(SerializationParser::StartContext *ctx) override;
 

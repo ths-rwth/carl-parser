@@ -1,33 +1,11 @@
 #include "ParseTreeVisitor.h"
 
-#include <carl/core/Monomial.h>
-#include <carl/core/VariablePool.h>
-#include <carl/core/Term.h>
-#include <carl/core/MultivariatePolynomial.h>
 #include <carl/formula/Formula.h>
 
-#include "carl/core/Variable.h"
-#include "carl/core/Monomial.h"
-#include "carl/core/Term.h"
-#include "carl/core/RationalFunction.h"
-#include "carl/formula/Formula.h"
-
-#include <boost/variant.hpp>
-#include <string>
-
 namespace carl {
-	typedef mpq_class Rational;
-	typedef Rational CoeffType;
-	typedef MultivariatePolynomial<CoeffType> Poly;
 
-	template<typename Pol>
-	using TArithType = boost::variant< typename Pol::CoeffType, carl::Variable, carl::Monomial::Arg,
-			carl::Term<typename Pol::CoeffType>, Pol, RationalFunction<Pol> >;
-
-	typedef TArithType<Poly> ArithType;
-
-
-	class perform_addition: public boost::static_visitor<ArithType > {
+	template<typename Res>
+	class perform_addition: public boost::static_visitor<Res> {
 	public:
 		template<typename T, typename U>
 		ArithType  operator()(const T& lhs, const U& rhs) const {
@@ -61,7 +39,8 @@ namespace carl {
 		}
 	};
 
-	class perform_subtraction: public boost::static_visitor<ArithType > {
+	template<typename Res>
+	class perform_subtraction: public boost::static_visitor<Res> {
 	public:
 		template<typename T, typename U>
 		ArithType  operator()(const T& lhs, const U& rhs) const {
@@ -95,7 +74,8 @@ namespace carl {
 		}
 	};
 
-	class perform_multiplication: public boost::static_visitor<ArithType > {
+	template<typename Res>
+	class perform_multiplication: public boost::static_visitor<Res> {
 	public:
 		template<typename T, typename U>
 		ArithType operator()(const T& lhs, const U& rhs) const {
@@ -124,7 +104,8 @@ namespace carl {
 		}
 	};
 
-	class perform_division: public boost::static_visitor<ArithType > {
+	template<typename Res>
+	class perform_division: public boost::static_visitor<Res> {
 	public:
 		ArithType  operator()(const RationalFunction<Poly>& lhs, const CoeffType& rhs) const {
 			return lhs / rhs;
@@ -164,21 +145,22 @@ namespace carl {
 		}
 	};
 
-	class make_constraint: public boost::static_visitor<Constraint<Poly>> {
+	template<typename Pol>
+	class make_constraint: public boost::static_visitor<Constraint<Pol>> {
 		Relation m_rel;
 	public:
 		make_constraint(Relation rel) : m_rel(rel) {}
 
 		template<typename T>
-		Constraint<Poly> operator()(T const& expr) const {
-			return Constraint<Poly>(Poly(expr), m_rel);
+		Constraint<Pol> operator()(T const& expr) const {
+			return Constraint<Pol>(Pol(expr), m_rel);
 		}
 
-		Constraint<Poly> operator()(Poly const& expr) const {
-			return Constraint<Poly>(expr, m_rel);
+		Constraint<Pol> operator()(Pol const& expr) const {
+			return Constraint<Pol>(expr, m_rel);
 		}
 
-		Constraint<Poly> operator()(RationalFunction<Poly> const& expr) const {
+		Constraint<Pol> operator()(RationalFunction<Pol> const& expr) const {
 			throw std::runtime_error("Cannot compare rational function");
 		}
 	};
@@ -191,10 +173,12 @@ namespace carl {
 		}
 	};
 
+	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor::visitStart(SerializationParser::StartContext *ctx) {
 		return ctx->carl_expr()->accept(this);
 	}
 
+	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor::visitCarl_expr(SerializationParser::Carl_exprContext *ctx) {
 		if (ctx->formula_nary()) {
 			return ctx->formula_nary()->accept(this);
@@ -209,18 +193,19 @@ namespace carl {
 		} else if (ctx->number()) {
 			return boost::apply_visitor(to_antlr_any(), ctx->number()->accept(this).as<ArithType>());
 		} else if (ctx->boolean()) {
-			return ctx->boolean()->accept(this).as<Formula<Poly>>();
+			return ctx->boolean()->accept(this).as<Formula<Pol>>();
 		}
 		throw std::runtime_error("Unknown formula rule");
 	}
 
+	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor::visitForm_expr(SerializationParser::Form_exprContext *ctx) {
 		if (ctx->formula_nary()) {
 			return ctx->formula_nary()->accept(this);
 		} else if (ctx->formula_unary()) {
 			return ctx->formula_unary()->accept(this);
 		} else if (ctx->constraint()) {
-			return Formula<Poly>(ctx->constraint()->accept(this).as<Constraint<Poly>>());
+			return Formula<Pol>(ctx->constraint()->accept(this).as<Constraint<Pol>>());
 		} else if (ctx->boolean()) {
 			return ctx->boolean()->accept(this);
 		} else if (ctx->bool_variable()) {
@@ -229,32 +214,34 @@ namespace carl {
 		throw std::runtime_error("Unknown formula rule");
 	}
 
+	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor::visitFormula_nary(SerializationParser::Formula_naryContext *ctx) {
 		FormulaType type = ctx->form_op_nary()->accept(this).as<FormulaType>();
 		if (type == FormulaType::ITE) {
 			if (ctx->form_expr().size() != 3) {
 				throw std::runtime_error("ITE formula requires 3 subformulae");
 			}
-			return Formula<Poly>(type, ctx->form_expr(0)->accept(this).as<Formula<Poly>>(),
-			               ctx->form_expr(1)->accept(this).as<Formula<Poly>>(),
-			               ctx->form_expr(2)->accept(this).as<Formula<Poly>>());
+			return Formula<Pol>(type, ctx->form_expr(0)->accept(this).as<Formula<Pol>>(),
+			               ctx->form_expr(1)->accept(this).as<Formula<Pol>>(),
+			               ctx->form_expr(2)->accept(this).as<Formula<Pol>>());
 		} else {
 			if (ctx->form_expr().size() < 2) {
 				if (type != FormulaType::AND && type != FormulaType::OR) {
 					throw std::runtime_error("formula requires >1 subformulae");
 				}
-				return ctx->form_expr(0)->accept(this).as<Formula<Poly>>();
+				return ctx->form_expr(0)->accept(this).as<Formula<Pol>>();
 			}
 			size_t index = 0;
-			Formula<Poly> form = ctx->form_expr(index)->accept(this).as<Formula<Poly>>();
+			Formula<Pol> form = ctx->form_expr(index)->accept(this).as<Formula<Pol>>();
 			++index;
 			for(; index < ctx->form_expr().size(); ++index) {
-				form = Formula<Poly>(type, form, ctx->form_expr(index)->accept(this).as<Formula<Poly>>());
+				form = Formula<Pol>(type, form, ctx->form_expr(index)->accept(this).as<Formula<Pol>>());
 			}
 			return form;
 		}
 	}
 
+	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor::visitForm_op_nary(SerializationParser::Form_op_naryContext *ctx) {
 		auto const& text = ctx->getText();
 		if (text == "and") {
@@ -273,32 +260,35 @@ namespace carl {
 		throw std::runtime_error("Unknown formula operator");
 	}
 
+	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor::visitFormula_unary(SerializationParser::Formula_unaryContext *ctx) {
-		auto formula = ctx->form_expr()->accept(this).as<Formula<Poly>>();
-		return Formula<Poly>(FormulaType::NOT, formula);
+		auto formula = ctx->form_expr()->accept(this).as<Formula<Pol>>();
+		return Formula<Pol>(FormulaType::NOT, formula);
 	}
 
+	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor::visitConstraint(SerializationParser::ConstraintContext *ctx) {
 		auto const& text = ctx->token->getText();
 		antlrcpp::Any expr = ctx->arith_expr()->accept(this);
 		auto arith_expr = expr.as<ArithType>();
 		if (text == "=") {
-			return boost::apply_visitor(make_constraint(Relation::EQ), arith_expr);
+			return boost::apply_visitor(make_constraint<Pol>(Relation::EQ), arith_expr);
 		} else if (text == "!=") {
-			return boost::apply_visitor(make_constraint(Relation::NEQ), arith_expr);
+			return boost::apply_visitor(make_constraint<Pol>(Relation::NEQ), arith_expr);
 		} else if (text == "<") {
-			return boost::apply_visitor(make_constraint(Relation::LESS), arith_expr);
+			return boost::apply_visitor(make_constraint<Pol>(Relation::LESS), arith_expr);
 		} else if (text == "<=") {
-			return boost::apply_visitor(make_constraint(Relation::LEQ), arith_expr);
+			return boost::apply_visitor(make_constraint<Pol>(Relation::LEQ), arith_expr);
 		} else if (text == ">") {
-			return boost::apply_visitor(make_constraint(Relation::GREATER), arith_expr);
+			return boost::apply_visitor(make_constraint<Pol>(Relation::GREATER), arith_expr);
 		} else if (text == ">=") {
-			return boost::apply_visitor(make_constraint(Relation::GEQ), arith_expr);
+			return boost::apply_visitor(make_constraint<Pol>(Relation::GEQ), arith_expr);
 		} else {
 			throw std::runtime_error("Unknown constraint operator");
 		}
 	}
 
+	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor::visitArith_expr(SerializationParser::Arith_exprContext *ctx) {
 		if (ctx->arith_nary()) {
 			return ctx->arith_nary()->accept(this);
@@ -310,28 +300,29 @@ namespace carl {
 		throw std::runtime_error("Unknown arithmetic rule");
 	}
 
+	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor::visitArith_nary(carl::SerializationParser::Arith_naryContext *ctx) {
 		auto const& text = ctx->token->getText();
 		auto baseExpr = ctx->arith_expr(0)->accept(this).as<ArithType>();
 		if (text == "+") {
 			for(size_t i = 1; i < ctx->arith_expr().size(); ++i) {
 				auto nextExpr = ctx->arith_expr(i)->accept(this).as<ArithType>();
-				baseExpr = boost::apply_visitor(perform_addition(), baseExpr, nextExpr);
+				baseExpr = boost::apply_visitor(perform_addition<ArithType>(), baseExpr, nextExpr);
 			}
 		} else if (text == "-") {
 			for(size_t i = 1; i < ctx->arith_expr().size(); ++i) {
 				auto nextExpr = ctx->arith_expr(i)->accept(this);
-				baseExpr = boost::apply_visitor(perform_subtraction(), baseExpr, nextExpr.as<ArithType>());
+				baseExpr = boost::apply_visitor(perform_subtraction<ArithType>(), baseExpr, nextExpr.as<ArithType>());
 			}
 		} else if (text == "*") {
 			for(size_t i = 1; i < ctx->arith_expr().size(); ++i) {
 				auto nextExpr = ctx->arith_expr(i)->accept(this);
-				baseExpr = boost::apply_visitor(perform_multiplication(), baseExpr, nextExpr.as<ArithType>());
+				baseExpr = boost::apply_visitor(perform_multiplication<ArithType>(), baseExpr, nextExpr.as<ArithType>());
 			}
 		} else if (text == "/") {
 			for(size_t i = 1; i < ctx->arith_expr().size(); ++i) {
 				auto nextExpr = ctx->arith_expr(i)->accept(this);
-				baseExpr = boost::apply_visitor(perform_division(), baseExpr, nextExpr.as<ArithType>());
+				baseExpr = boost::apply_visitor(perform_division<ArithType>(), baseExpr, nextExpr.as<ArithType>());
 			}
 		} else {
 			throw std::runtime_error("Unknown arithmetic operator");
@@ -339,15 +330,17 @@ namespace carl {
 		return baseExpr;
 	}
 
+	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor::visitBoolean(SerializationParser::BooleanContext *ctx) {
 		if (ctx->TRUE()) {
-			return carl::Formula<Poly>(FormulaType::TRUE);
+			return carl::Formula<Pol>(FormulaType::TRUE);
 		} else if (ctx->FALSE()) {
-			return carl::Formula<Poly>(FormulaType::FALSE);
+			return carl::Formula<Pol>(FormulaType::FALSE);
 		}
 		throw std::runtime_error("Unknown boolean");
 	}
 
+	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor::visitNumber(SerializationParser::NumberContext *ctx) {
 		Rational tmp;
 		if (ctx->NUMERAL()) {
@@ -374,6 +367,7 @@ namespace carl {
 		throw std::runtime_error("Unknown number");
 	}
 
+	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor::visitBool_variable(SerializationParser::Bool_variableContext *ctx) {
 		std::string name = ctx->SYMBOL()->getSymbol()->getText();
 		//try and generate new variable from pool
@@ -389,9 +383,10 @@ namespace carl {
 			newVar = freshBooleanVariable(name);
 		}
 
-		return Formula<Poly>(newVar);
+		return Formula<Pol>(newVar);
 	}
 
+	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor::visitReal_variable(SerializationParser::Real_variableContext *ctx) {
 		std::string name = ctx->SYMBOL()->getSymbol()->getText();
 		//try and generate new variable from pool
