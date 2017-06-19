@@ -10,34 +10,46 @@ grammar Serialization;
 ///////////////////////////////
 // Rules
 ///////////////////////////////
-start : form_expr EOF ;
+start : carl_expr EOF ;
+
+carl_expr
+    : formula_nary
+    | formula_unary
+    | constraint
+    | arith_nary
+    | boolean
+    | number
+    | real_variable
+    ;
 
 form_expr
     : formula_nary
     | formula_unary
     | constraint
-    | arith_expr
+    | boolean
+    | bool_variable
     ;
 
 formula_nary : LPAREN form_op_nary form_expr+ RPAREN;
 form_op_nary : 'and' | 'or' | '=' | 'xor' | '=>' | 'ite';
 
-formula_unary : LPAREN 'not' form_expr RPAREN;
+formula_unary : LPAREN token='not' form_expr RPAREN;
 
-constraint : LPAREN relation arith_expr '0' RPAREN;
 // NEQ not directly written ( is not = )
-relation : '=' | '<' | '<=' | '>' | '>=';
+constraint : LPAREN token=('=' | '<' | '<=' | '>' | '>=') arith_expr '0' RPAREN;
 
 arith_expr
     : arith_nary
-    | atom
+    | number
+    | real_variable
     ;
 
 arith_nary : LPAREN token=('+' | '-' | '*' | '/') arith_expr+ RPAREN;
 
-atom : TRUE | FALSE | number | variable;
+boolean : TRUE | FALSE;
 number : NUMERAL | DECIMAL | HEXADECIMAL | BINARY;
-variable : SYMBOL;
+real_variable : SYMBOL;
+bool_variable : SYMBOL;
 
 //variable_type : 'Bool' | 'Real' | '?_Uninterpreted' | '?_Bitvector';
 

@@ -12,6 +12,8 @@ namespace carl {
 	public:
 		antlrcpp::Any visitStart(SerializationParser::StartContext *ctx) override;
 
+		antlrcpp::Any visitCarl_expr(SerializationParser::Carl_exprContext *ctx) override;
+
 		antlrcpp::Any visitForm_expr(SerializationParser::Form_exprContext *ctx) override;
 
 		antlrcpp::Any visitFormula_nary(SerializationParser::Formula_naryContext *ctx) override;
@@ -22,17 +24,17 @@ namespace carl {
 
 		antlrcpp::Any visitConstraint(SerializationParser::ConstraintContext *ctx) override;
 
-		antlrcpp::Any visitRelation(SerializationParser::RelationContext *ctx) override;
-
 		antlrcpp::Any visitArith_expr(SerializationParser::Arith_exprContext *ctx) override;
 
 		antlrcpp::Any visitArith_nary(carl::SerializationParser::Arith_naryContext *ctx) override;
 
-		antlrcpp::Any visitAtom(SerializationParser::AtomContext *ctx) override;
+		antlrcpp::Any visitBoolean(SerializationParser::BooleanContext *ctx) override;
 
 		antlrcpp::Any visitNumber(SerializationParser::NumberContext *ctx) override;
 
-		antlrcpp::Any visitVariable(SerializationParser::VariableContext *ctx) override;
+		antlrcpp::Any visitBool_variable(SerializationParser::Bool_variableContext *ctx) override;
+
+		antlrcpp::Any visitReal_variable(SerializationParser::Real_variableContext *ctx) override;
 
 	};
 
