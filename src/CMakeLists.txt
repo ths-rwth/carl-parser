@@ -32,19 +32,26 @@ function(create_antlr_targets)
                 add_custom_command(
                         OUTPUT ${generated_sources}
                         COMMAND ${CMAKE_COMMAND} -E make_directory ${DESTDIR}
-                        COMMAND ${Java_JAVA_EXECUTABLE} -jar ${ANTLR_JAR} -Werror -Dlanguage=Cpp -listener -visitor -o ${DESTDIR} -package carl ${file}
+                        COMMAND ${Java_JAVA_EXECUTABLE} -jar ${ANTLR_JAR} -Werror -Dlanguage=Cpp -listener -visitor -o ${DESTDIR} -package carlparser ${file}
                         DEPENDS ${file}
                         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src
                 )
         endforeach()
         set(ANTLR_generated_include ${ANTLR_generated_include} "${CMAKE_BINARY_DIR}/src" PARENT_SCOPE)
         set(ANTLR_generated_sources ${ANTLR_generated_sources} "${generated_sources}" PARENT_SCOPE)
+
 endfunction()
 
 create_antlr_targets()
 
 add_library(carl-parser SHARED "${CMAKE_CURRENT_SOURCE_DIR}/ParseTreeVisitor.cpp" ${ANTLR_generated_sources})
 target_include_directories(carl-parser PUBLIC ${ANTLR_generated_include})
-target_link_libraries(carl-parser PUBLIC antlr4-shared)
-target_link_libraries(carl-parser PUBLIC lib_carl)
-add_dependencies(lib_carl ANTLR-runtime)
+target_link_libraries(carl-parser PUBLIC lib_carl antlr4shared)
+
+set(PARSER_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR})
+list(APPEND PARSER_INCLUDES ${ANTLR_generated_include})
+
+target_include_directories( carl-parser PUBLIC
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/src>
+        "$<BUILD_INTERFACE:${PARSER_INCLUDES}>"
+        )

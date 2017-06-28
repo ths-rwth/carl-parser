@@ -47,3 +47,4 @@ include(resources/antlr4.cmake)
 message(STATUS "Use shipped version of ANTLR ${ANTLR_VERSION}")
 
 add_subdirectory(src)
+add_subdirectory(test)

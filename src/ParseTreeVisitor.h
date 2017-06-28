@@ -6,7 +6,7 @@
 
 #include <boost/variant.hpp>
 
-namespace carl {
+namespace carlparser {
 
 	/**
 	 * Visitor for the Serialization grammar that will build
@@ -17,7 +17,7 @@ namespace carl {
 		typedef typename Pol::CoeffType Rational;
 
 		using ArithType = boost::variant<Rational, carl::Variable, carl::Monomial::Arg,
-				carl::Term<Rational>, Pol, RationalFunction<Pol> >;
+				carl::Term<Rational>, Pol, carl::RationalFunction<Pol> >;
 
 	public:
 		antlrcpp::Any visitStart(SerializationParser::StartContext *ctx) override;
@@ -36,7 +36,7 @@ namespace carl {
 
 		antlrcpp::Any visitArith_expr(SerializationParser::Arith_exprContext *ctx) override;
 
-		antlrcpp::Any visitArith_nary(carl::SerializationParser::Arith_naryContext *ctx) override;
+		antlrcpp::Any visitArith_nary(SerializationParser::Arith_naryContext *ctx) override;
 
 		antlrcpp::Any visitBoolean(SerializationParser::BooleanContext *ctx) override;
 

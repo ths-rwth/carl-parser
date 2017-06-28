@@ -12,7 +12,7 @@
 #include <carl/core/RationalFunction.h>
 #include <carl/formula/Formula.h>
 
-namespace carl {
+namespace carlparser {
 
 std::string serialize(Variable const& v) {
 	return v.getName();

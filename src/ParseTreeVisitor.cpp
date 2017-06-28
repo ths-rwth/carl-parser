@@ -2,7 +2,9 @@
 
 #include <carl/formula/Formula.h>
 
-namespace carl {
+using namespace carl;
+
+namespace carlparser {
 
 	template<typename Res, typename Pol>
 	class perform_addition: public boost::static_visitor<Res> {
@@ -301,7 +303,7 @@ namespace carl {
 	}
 
 	template<typename Pol>
-	antlrcpp::Any ParseTreeVisitor<Pol>::visitArith_nary(carl::SerializationParser::Arith_naryContext *ctx) {
+	antlrcpp::Any ParseTreeVisitor<Pol>::visitArith_nary(SerializationParser::Arith_naryContext *ctx) {
 		auto const& text = ctx->token->getText();
 		auto baseExpr = ctx->arith_expr(0)->accept(this).template as<ArithType>();
 		if (text == "+") {

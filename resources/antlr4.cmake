@@ -29,19 +29,23 @@ ExternalProject_Add(
         DOWNLOAD_COMMAND ""
         SOURCE_DIR "${SOURCE_DIR}"
         UPDATE_COMMAND ""
-        CONFIGURE_COMMAND ${CMAKE_COMMAND} -G${CMAKE_GENERATOR} -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_SHARED_LIBS=ON -BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> "<SOURCE_DIR>/runtime/Cpp" -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+        CONFIGURE_COMMAND ${CMAKE_COMMAND} -G${CMAKE_GENERATOR} -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_SHARED_LIBS=ON -BUILD_TESTS=OFF  "<SOURCE_DIR>/runtime/Cpp" -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
         BUILD_COMMAND make -j4 ${ANTLR-runtime_TARGETS}
 )
 
 ExternalProject_Get_Property(ANTLR-runtime INSTALL_DIR)
 
-add_library(antlr4-shared SHARED IMPORTED GLOBAL)
+add_library(antlr4shared SHARED IMPORTED)
 file(MAKE_DIRECTORY "${INSTALL_DIR}/include")
 file(MAKE_DIRECTORY "${INSTALL_DIR}/include/antlr4-runtime")
-set_target_properties(antlr4-shared PROPERTIES IMPORTED_LOCATION "${INSTALL_DIR}/lib/libantlr4-runtime${DYNAMIC_EXT}")
-set_target_properties(antlr4-shared PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${INSTALL_DIR}/include;${INSTALL_DIR}/include/antlr4-runtime")
+message("${INSTALL_DIR}/lib/libantlr4-runtime${DYNAMIC_EXT}")
+
+set_target_properties(antlr4shared PROPERTIES IMPORTED_LOCATION "${INSTALL_DIR}/lib/libantlr4-runtime${DYNAMIC_EXT}")
+set_target_properties(antlr4shared PROPERTIES IMPORTED_IMPLIB ${INSTALL_DIR}/lib/libantlr4-runtime${DYNAMIC_EXT})
+
+set_target_properties(antlr4shared PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${INSTALL_DIR}/include;${INSTALL_DIR}/include/antlr4-runtime")
 
 add_dependencies(ANTLR-runtime ANTLR)
-add_dependencies(antlr4-shared ANTLR-runtime)
+add_dependencies(antlr4shared ANTLR-runtime)
 
 mark_as_advanced(MAVEN)

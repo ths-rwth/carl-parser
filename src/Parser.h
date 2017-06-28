@@ -15,7 +15,7 @@
 
 using namespace antlr4;
 
-namespace carl {
+namespace carlparser {
 	class ErrorListener: public antlr4::ANTLRErrorListener {
 	public:
 		void syntaxError(antlr4::Recognizer *recognizer, antlr4::Token *offendingSymbol, size_t line,
