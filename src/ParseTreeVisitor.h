@@ -1,6 +1,6 @@
 #pragma once
 
-#include <carl/io/serialization/SerializationVisitor.h>
+#include "SerializationVisitor.h"
 #include <carl/core/MultivariatePolynomial.h>
 #include <carl/core/RationalFunction.h>
 

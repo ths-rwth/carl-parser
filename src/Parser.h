@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <carl/io/serialization/SerializationLexer.h>
-#include <carl/io/serialization/SerializationParser.h>
-#include <carl/io/serialization/SerializationVisitor.h>
-#include <carl/io/serialization/ParseTreeVisitor.h>
+#include "SerializationLexer.h"
+#include "SerializationParser.h"
+#include "SerializationVisitor.h"
+#include "ParseTreeVisitor.h"
 #include <carl/formula/Formula.h>
 
 #include <antlr4-runtime.h>
