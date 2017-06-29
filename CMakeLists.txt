@@ -38,7 +38,30 @@ endif()
 find_package(carl REQUIRED)
 set(ANTLR_VERSION "4.7")
 include(resources/antlr4.cmake)
+include(cmake/export_target.cmake)
 message(STATUS "Use shipped version of ANTLR ${ANTLR_VERSION}")
 
 add_subdirectory(src)
 add_subdirectory(test)
+
+# Add all targets to the build-tree export set
+set(EXPORT_TARGETS "carl-parser")
+export(TARGETS ${EXPORT_TARGETS} FILE "${PROJECT_BINARY_DIR}/carlparserTargets.cmake")
+
+message(STATUS "Registered with cmake")
+export(PACKAGE carlparser)
+
+export_target(DEP_TARGETS antlr4shared)
+
+set(INCLUDE_DIR include/)
+
+include(CMakePackageConfigHelpers)
+
+set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src")
+configure_package_config_file(
+        cmake/carlparserConfig.cmake.in
+        ${PROJECT_BINARY_DIR}/carlparserConfig.cmake
+        INSTALL_DESTINATION ${PROJECT_BINARY_DIR}
+        PATH_VARS INCLUDE_DIR
+)
+

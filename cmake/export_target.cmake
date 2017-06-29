@@ -1,0 +1,61 @@
+#### From carl.
+
+function(_export_target_add_lib output TARGET TYPE)
+    set(${output} "${${output}}
+
+add_library(${TARGET} ${TYPE} IMPORTED)" PARENT_SCOPE)
+endfunction(_export_target_add_lib)
+function(_export_target_start output TARGET)
+    set(${output} "${${output}}
+
+if(NOT TARGET ${TARGET})" PARENT_SCOPE)
+endfunction(_export_target_start)
+function(_export_target_end output)
+    set(${output} "${${output}}
+endif()" PARENT_SCOPE)
+endfunction(_export_target_end)
+
+macro(_export_target_set_prop output TARGET REQUIRED PROPERTY)
+    get_target_property(VALUE ${TARGET} ${PROPERTY})
+    set(extra_args ${ARGN})
+    list(GET extra_args 0 NEWPROPERTY)
+    if(NOT NEWPROPERTY)
+        set(NEWPROPERTY ${PROPERTY})
+    endif()
+    if(VALUE)
+        set(${output} "${${output}}
+set_target_properties(${TARGET} PROPERTIES ${NEWPROPERTY} \"${VALUE}\")")
+    elseif(${REQUIRED})
+        message(STATUS "Did not find ${PROPERTY} of ${TARGET} for export.")
+    endif()
+endmacro(_export_target_set_prop)
+
+macro(export_target output TARGET)
+    get_target_property(TYPE ${TARGET} TYPE)
+    _export_target_start(${output} ${TARGET})
+    if(TYPE STREQUAL "SHARED_LIBRARY")
+        _export_target_add_lib(${output} ${TARGET} SHARED)
+        _export_target_set_prop(${output} ${TARGET} TRUE IMPORTED_LOCATION)
+        _export_target_set_prop(${output} ${TARGET} FALSE INTERFACE_INCLUDE_DIRECTORIES)
+        _export_target_set_prop(${output} ${TARGET} FALSE LINK_INTERFACE_LIBRARIES)
+    elseif(TYPE STREQUAL "STATIC_LIBRARY")
+        _export_target_add_lib(${output} ${TARGET} STATIC)
+        _export_target_set_prop(${output} ${TARGET} TRUE IMPORTED_LOCATION)
+        _export_target_set_prop(${output} ${TARGET} FALSE INTERFACE_INCLUDE_DIRECTORIES)
+        _export_target_set_prop(${output} ${TARGET} FALSE LINK_INTERFACE_LIBRARIES IMPORTED_LINK_INTERFACE_LIBRARIES)
+    elseif(TYPE STREQUAL "INTERFACE_LIBRARY")
+        _export_target_add_lib(${output} ${TARGET} INTERFACE)
+        _export_target_set_prop(${output} ${TARGET} TRUE INTERFACE_INCLUDE_DIRECTORIES)
+        _export_target_set_prop(${output} ${TARGET} FALSE INTERFACE_LINK_LIBRARIES)
+    else()
+        message(STATUS "Unknown type ${TYPE}")
+    endif()
+    if(NOT "${ARGN}" STREQUAL "")
+        set(deps ${ARGN})
+        foreach(d ${deps})
+            set(${output} "${${output}}
+set_target_properties(${TARGET} PROPERTIES IMPORTED_LINK_INTERFACE_LIBRARIES \"${d}\")")
+        endforeach()
+    endif()
+    _export_target_end(${output})
+endmacro(export_target)
