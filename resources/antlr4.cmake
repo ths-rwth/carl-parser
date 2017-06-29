@@ -34,14 +34,14 @@ ExternalProject_Add(
 )
 
 ExternalProject_Get_Property(ANTLR-runtime INSTALL_DIR)
+file(TO_CMAKE_PATH ${INSTALL_DIR} INSTALL_DIR)
 
-add_library(antlr4shared SHARED IMPORTED)
+add_library(antlr4shared SHARED IMPORTED GLOBAL)
 file(MAKE_DIRECTORY "${INSTALL_DIR}/include")
 file(MAKE_DIRECTORY "${INSTALL_DIR}/include/antlr4-runtime")
 message("${INSTALL_DIR}/lib/libantlr4-runtime${DYNAMIC_EXT}")
 
-set_target_properties(antlr4shared PROPERTIES IMPORTED_LOCATION "${INSTALL_DIR}/lib/libantlr4-runtime${DYNAMIC_EXT}")
-set_target_properties(antlr4shared PROPERTIES IMPORTED_IMPLIB ${INSTALL_DIR}/lib/libantlr4-runtime${DYNAMIC_EXT})
+set_target_properties(antlr4shared PROPERTIES IMPORTED_LOCATION ${INSTALL_DIR}/lib/libantlr4-runtime${DYNAMIC_EXT})
 
 set_target_properties(antlr4shared PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${INSTALL_DIR}/include;${INSTALL_DIR}/include/antlr4-runtime")
 
