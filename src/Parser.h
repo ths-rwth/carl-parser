@@ -41,10 +41,50 @@ namespace carlparser {
 		}
 	};
 
-	template<typename Pol>
-	using parser_types = boost::variant< typename Pol::CoeffType, Variable, Monomial::Arg,
-			Term<typename Pol::CoeffType>, Pol, RationalFunction<Pol>,
-			Constraint<Pol>, Formula<Pol> >;
+    enum class ParserReturnType {
+        Rational, Variable, Monomial, Term, Polynomial, RationalFunction, Constraint, Formula
+    };
+
+    template<typename Pol>
+    class typechecker: public boost::static_visitor<ParserReturnType> {
+    public:
+        ParserReturnType operator()(const typename Pol::CoeffType&) const {
+            return ParserReturnType::Rational;
+        }
+        ParserReturnType  operator()(const carl::Variable&) const {
+            return ParserReturnType::Variable;
+        }
+        ParserReturnType  operator()(const carl::Monomial::Arg&) const {
+            return ParserReturnType::Monomial;
+        }
+        ParserReturnType  operator()(const carl::Term<typename Pol::CoeffType>&) const {
+            return ParserReturnType::Term;
+        }
+        ParserReturnType  operator()(const Pol&) const {
+            return ParserReturnType::Polynomial;
+        }
+        ParserReturnType  operator()(const carl::RationalFunction<Pol>&) const {
+            return ParserReturnType::RationalFunction;
+        }
+        ParserReturnType operator()(const carl::Constraint<Pol>&) const {
+            return ParserReturnType::Constraint;
+        }
+        ParserReturnType  operator()(const carl::Formula<Pol>&) const {
+            return ParserReturnType::Formula;
+        }
+    };
+
+
+    template<typename Pol>
+    using parser_types = boost::variant< typename Pol::CoeffType, carl::Variable, carl::Monomial::Arg,
+            carl::Term<typename Pol::CoeffType>, Pol, carl::RationalFunction<Pol>,
+    carl::Constraint<Pol>, carl::Formula<Pol> >;
+
+    template<typename Pol>
+    inline ParserReturnType check_type(const parser_types<Pol>& t) {
+        return boost::apply_visitor(typechecker<Pol>(), t);
+    }
+
 
 	template<typename Pol>
 	parser_types<Pol> deserialize(std::string input) {
@@ -63,22 +103,22 @@ namespace carlparser {
 		tree::ParseTree* tree = parser.start();
 		antlrcpp::Any resultData = tree->accept(&visitor);
 
-		if (resultData.is<Formula<Pol>>()) {
-			return resultData.as<Formula<Pol>>();
-		} else if (resultData.is<Constraint<Pol>>()) {
-			return resultData.as<Constraint<Pol>>();
-		} else if (resultData.is<RationalFunction<Pol>>()) {
-			return resultData.as<RationalFunction<Pol>>();
+		if (resultData.is<carl::Formula<Pol>>()) {
+			return resultData.as<carl::Formula<Pol>>();
+		} else if (resultData.is<carl::Constraint<Pol>>()) {
+			return resultData.as<carl::Constraint<Pol>>();
+		} else if (resultData.is<carl::RationalFunction<Pol>>()) {
+			return resultData.as<carl::RationalFunction<Pol>>();
 		} else if (resultData.is<Pol>()) {
 			return resultData.as<Pol>();
-		} else if (resultData.is<Term<typename Pol::CoeffType>>()) {
-			return resultData.as<Term<typename Pol::CoeffType>>();
-		} else if (resultData.is<Monomial::Arg>()) {
-			return resultData.as<Monomial::Arg>();
+		} else if (resultData.is<carl::Term<typename Pol::CoeffType>>()) {
+			return resultData.as<carl::Term<typename Pol::CoeffType>>();
+		} else if (resultData.is<carl::Monomial::Arg>()) {
+			return resultData.as<carl::Monomial::Arg>();
 		} else if (resultData.is<typename Pol::CoeffType>()) {
 			return resultData.as<typename Pol::CoeffType>();
-		} else if (resultData.is<Variable>()) {
-			return resultData.as<Variable>();
+		} else if (resultData.is<carl::Variable>()) {
+			return resultData.as<carl::Variable>();
 		} else {
 			throw std::runtime_error("Unexpected parser result");
 		}

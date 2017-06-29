@@ -11,19 +11,17 @@
 #include "SerializationParser.h"
 #include "SerializationVisitor.h"
 #include "ParseTreeVisitor.h"
+#include "Parser.h"
 
 using namespace carlparser;
 using namespace antlr4;
 
 TEST_CASE("testing the parse") {
-    ANTLRInputStream input(u8"(/ + 12 12)");
-    SerializationLexer lexer(&input);
-    CommonTokenStream tokens(&lexer);
+    auto res = carlparser::deserialize<carl::MultivariatePolynomial<mpq_class>>("(/ 12 12)");
+    DOCTEST_CHECK_EQ(check_type(res), carlparser::ParserReturnType::Rational);
+    res = carlparser::deserialize<carl::MultivariatePolynomial<mpq_class>>("x");
+    DOCTEST_CHECK_EQ(check_type(res), carlparser::ParserReturnType::Variable);
+    res = carlparser::deserialize<carl::MultivariatePolynomial<mpq_class>>("(+ x 1)");
+    DOCTEST_CHECK_EQ(check_type(res), carlparser::ParserReturnType::Polynomial);
 
-    tokens.fill();
-
-    SerializationParser parser(&tokens);
-    tree::ParseTree* tree = parser.start();
-    ParseTreeVisitor<carl::MultivariatePolynomial<mpq_class>> visitor;
-    tree->accept(&visitor);
 }
