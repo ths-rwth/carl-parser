@@ -45,11 +45,11 @@ endfunction()
 create_antlr_targets()
 #set(CMAKE_DEBUG_TARGET_PROPERTIES INCLUDE_DIRECTORIES)
 
-add_library(carl-parser SHARED "${CMAKE_CURRENT_SOURCE_DIR}/ParseTreeVisitor.cpp" ${ANTLR_generated_sources})
+add_library(carl-parser SHARED ${CMAKE_CURRENT_SOURCE_DIR}/carl-parser/ParseTreeVisitor.cpp ${CMAKE_CURRENT_SOURCE_DIR}/carl-parser/Parser.cpp ${ANTLR_generated_sources})
 target_include_directories(carl-parser PUBLIC ${ANTLR_generated_include})
-target_link_libraries(carl-parser PUBLIC lib_carl antlr4shared)
+target_link_libraries(carl-parser PUBLIC lib_carl PRIVATE antlr4shared)
 
-set(PARSER_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR})
+set(PARSER_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/)
 list(APPEND PARSER_INCLUDES ${ANTLR_generated_include})
 
 

@@ -5,16 +5,9 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
-#include <antlr4-runtime.h>
-#include <tree/ParseTreeVisitor.h>
-#include "SerializationLexer.h"
-#include "SerializationParser.h"
-#include "SerializationVisitor.h"
-#include "ParseTreeVisitor.h"
-#include "Parser.h"
+#include "carl-parser/Parser.h"
 
 using namespace carlparser;
-using namespace antlr4;
 
 TEST_CASE("testing the parse") {
     auto res = carlparser::deserialize<carl::MultivariatePolynomial<mpq_class>>("(/ 12 12)");
