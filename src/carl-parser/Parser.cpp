@@ -82,7 +82,7 @@ namespace carlparser {
     parser_types<carl::MultivariatePolynomial<mpq_class>> deserialize(std::string);
 #ifdef USE_CLN_NUMBERS
     template
-	class ParseTreeVisitor<MultivariatePolynomial<cln::cl_RA>>;
+    parser_types<carl::MultivariatePolynomial<cln::cl_RA>> deserialize(std::string);
 #endif
 #ifdef USE_MPFR_FLOAT
     template
