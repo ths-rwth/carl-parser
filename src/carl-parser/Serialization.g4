@@ -36,7 +36,7 @@ form_op_nary : 'and' | 'or' | '=' | 'xor' | '=>' | 'ite';
 formula_unary : LPAREN token='not' form_expr RPAREN;
 
 // NEQ not directly written ( is not = )
-constraint : LPAREN token=('=' | '<' | '<=' | '>' | '>=') arith_expr '0' RPAREN;
+constraint : LPAREN token=('=' | '<' | '<=' | '>' | '>=') left=arith_expr arith_expr RPAREN;
 
 arith_expr
     : arith_nary

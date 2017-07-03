@@ -271,8 +271,9 @@ namespace carlparser {
 	template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor<Pol>::visitConstraint(SerializationParser::ConstraintContext *ctx) {
 		auto const& text = ctx->token->getText();
-		antlrcpp::Any expr = ctx->arith_expr()->accept(this);
-		auto arith_expr = expr.template as<ArithType>();
+	    auto lhs = ctx->arith_expr(0)->accept(this).template as<ArithType>();
+        auto rhs = ctx->arith_expr(1)->accept(this).template as<ArithType>();
+		auto arith_expr = boost::apply_visitor(perform_subtraction<ArithType, Pol>(), lhs, rhs);
 		if (text == "=") {
 			return boost::apply_visitor(make_constraint<Pol>(Relation::EQ), arith_expr);
 		} else if (text == "!=") {
