@@ -79,7 +79,7 @@ FALSE: 'false';
 
 fragment DIGIT : [0-9];
 fragment LETTER : [A-Za-z];
-NUMERAL : '0' | ([1-9]DIGIT*);
+NUMERAL : '0' | '-'?([1-9]DIGIT*);
 DECIMAL : NUMERAL '.' DIGIT+;
 HEXADECIMAL : '#x' [0-9A-Fa-f]+;
 BINARY: '#b' [0-1]+;

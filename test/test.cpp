@@ -14,6 +14,8 @@ TEST_CASE("testing the parse") {
     DOCTEST_CHECK_EQ(check_type(res), carlparser::ParserReturnType::Rational);
     res = carlparser::deserialize<carl::MultivariatePolynomial<mpq_class>>("x");
     DOCTEST_CHECK_EQ(check_type(res), carlparser::ParserReturnType::Variable);
+    res = carlparser::deserialize<carl::MultivariatePolynomial<mpq_class>>("-1");
+    DOCTEST_CHECK_EQ(check_type(res), carlparser::ParserReturnType::Rational);
     res = carlparser::deserialize<carl::MultivariatePolynomial<mpq_class>>("(+ x 1)");
     DOCTEST_CHECK_EQ(check_type(res), carlparser::ParserReturnType::Polynomial);
     res = carlparser::deserialize<carl::MultivariatePolynomial<mpq_class>>("(< x 1)");
