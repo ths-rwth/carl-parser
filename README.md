@@ -3,6 +3,12 @@ Parser for carl data structures
 
 This is an [ANTLR](http://www.antlr.org)-based parser which is meant as an extension to [CArL](https://github.com/smtrat/carl).
 
+### Requirements
+
+The parser requires the following tools:
+- CArL
+- Maven
+
 ### Building
 
 To build, first install CArL. Then build carl-parser with
@@ -10,7 +16,7 @@ To build, first install CArL. Then build carl-parser with
 ```bash
 mkdir build
 cd build
-cmake .. 
+cmake ..
 make
 ```
 
