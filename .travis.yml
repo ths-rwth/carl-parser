@@ -1,0 +1,39 @@
+language: generic
+sudo: false
+dist: trusty
+
+cache:
+  apt: true
+
+addons:
+  apt:
+    sources:
+      - boost-latest
+      - george-edison55-precise-backports
+      - ubuntu-toolchain-r-test
+    packages:
+      - libboost1.55-all-dev
+      - cmake
+      - cmake-data
+      - g++-6
+      - libcln-dev
+      - libeigen3-dev
+      - libgmp-dev
+      - libgtest-dev
+      - openjdk-7-jdk
+      - time
+
+matrix:
+  include:
+    - os: linux
+      env: CC=gcc-6 CXX=g++-6
+    - os: osx
+      osx_image: xcode8.3
+      env: CC=clang CXX=clang++
+
+
+before_install:
+  - cd .ci/ && source setup_travis.sh && cd ../
+
+script:
+  - source .ci/build_travis.sh
