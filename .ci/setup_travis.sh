@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 if [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
-
+	
+	echo ""
+	
 elif [[ ${TRAVIS_OS_NAME} == "osx" ]]; then
 
 	brew update --quiet
