@@ -40,7 +40,9 @@ namespace carlparser {
 
 		antlrcpp::Any visitArith_nary(SerializationParser::Arith_naryContext *ctx) override;
 
-		antlrcpp::Any visitBoolean(SerializationParser::BooleanContext *ctx) override;
+        antlrcpp::Any visitArith_unary(SerializationParser::Arith_unaryContext *ctx) override;
+
+        antlrcpp::Any visitBoolean(SerializationParser::BooleanContext *ctx) override;
 
 		antlrcpp::Any visitNumber(SerializationParser::NumberContext *ctx) override;
 

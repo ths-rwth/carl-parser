@@ -17,6 +17,7 @@ carl_expr
     | formula_unary
     | constraint
     | arith_nary
+    | arith_unary
     | boolean
     | number
     | real_variable
@@ -40,11 +41,14 @@ constraint : LPAREN token=('=' | '<' | '<=' | '>' | '>=') left=arith_expr arith_
 
 arith_expr
     : arith_nary
+    | arith_unary
     | number
     | real_variable
     ;
 
-arith_nary : LPAREN token=('+' | '-' | '*' | '/') arith_expr+ RPAREN;
+arith_unary : LPAREN token=('+' | '-') arith_expr RPAREN;
+arith_nary : LPAREN token=('+' | '-' | '*' | '/') arith_expr arith_expr+ RPAREN;
+
 
 boolean : TRUE | FALSE;
 number : NUMERAL | DECIMAL | HEXADECIMAL | BINARY;
