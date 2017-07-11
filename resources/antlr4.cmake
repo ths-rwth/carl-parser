@@ -10,7 +10,7 @@ endif()
 
 ExternalProject_Add(
         ANTLR
-        GIT_REPOSITORY "https://github.com/antlr/antlr4.git"
+        GIT_REPOSITORY "https://github.com/volkm/antlr4.git"
         GIT_TAG "${ANTLR_VERSION}"
         BUILD_IN_SOURCE 1
         UPDATE_COMMAND ""
