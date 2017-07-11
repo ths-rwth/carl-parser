@@ -11,7 +11,8 @@ endif()
 ExternalProject_Add(
         ANTLR
         GIT_REPOSITORY "https://github.com/volkm/antlr4.git"
-        GIT_TAG "${ANTLR_VERSION}"
+        #GIT_TAG "${ANTLR_VERSION}"
+        GIT_TAG "rpath_fix"
         BUILD_IN_SOURCE 1
         UPDATE_COMMAND ""
         CONFIGURE_COMMAND mvn clean
