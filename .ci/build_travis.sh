@@ -17,3 +17,5 @@ cd build/
 
 cmake -Dcarl_DIR=`pwd`/../../carl/build ../
 make
+
+./test/carl-parser-test
