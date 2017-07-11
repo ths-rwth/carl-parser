@@ -16,8 +16,20 @@ endif()
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang") # Matches "Clang" and "AppleClang"
     if (APPLE)
         message(STATUS "Using clang ${CMAKE_CXX_COMPILER_VERSION} on apple")
-        set(CMAKE_MACOSX_RPATH 1)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -stdlib=libc++")
+
+        ##  RPATH settings
+        set(CMAKE_MACOSX_RPATH 1)
+        # don't skip the full RPATH for the build tree
+        SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+        # when building, don't use the install RPATH already (but only when installing)
+        SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+        # the RPATH to be used when installing
+        SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+        # add the automatically determined parts of the RPATH
+        # which point to directories outside the build tree to the install RPATH
+        SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
     else()
         message(STATUS "Using clang ${CMAKE_CXX_COMPILER_VERSION}")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
