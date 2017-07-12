@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(carl-parser)
 include(ExternalProject)
-
+SET_DIRECTORY_PROPERTIES(PROPERTIES EP_PREFIX ${CMAKE_BINARY_DIR}/resources)
 
 set(DYNAMIC_EXT ".so")
 set(STATIC_EXT ".a")
