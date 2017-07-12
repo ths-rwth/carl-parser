@@ -77,6 +77,24 @@ namespace carlparser {
 	};
 
 	template<typename Res, typename Pol>
+	class perform_unary_subtraction: public boost::static_visitor<Res> {
+	public:
+		template<typename T>
+		Res operator()(const T& lhs) const {
+			return -lhs;
+		}
+
+		Res operator()(const Monomial::Arg& lhs) const {
+			return -Pol(lhs);
+		}
+
+		Res operator()(const Variable& lhs) const {
+			return -Pol(lhs);
+		}
+	};
+
+
+	template<typename Res, typename Pol>
 	class perform_multiplication: public boost::static_visitor<Res> {
 	public:
 		template<typename T, typename U>
@@ -190,7 +208,9 @@ namespace carlparser {
 			return ctx->constraint()->accept(this);
 		} else if (ctx->arith_nary()) {
 			return boost::apply_visitor(to_antlr_any(), ctx->arith_nary()->accept(this).template as<ArithType>());
-		} else if (ctx->real_variable()) {
+		} else if (ctx->arith_unary()) {
+            return boost::apply_visitor(to_antlr_any(), ctx->arith_unary()->accept(this).template as<ArithType>());
+        } else if (ctx->real_variable()) {
 			return boost::apply_visitor(to_antlr_any(), ctx->real_variable()->accept(this).template as<ArithType>());
 		} else if (ctx->number()) {
 			return boost::apply_visitor(to_antlr_any(), ctx->number()->accept(this).template as<ArithType>());
@@ -295,7 +315,9 @@ namespace carlparser {
 	antlrcpp::Any ParseTreeVisitor<Pol>::visitArith_expr(SerializationParser::Arith_exprContext *ctx) {
 		if (ctx->arith_nary()) {
 			return ctx->arith_nary()->accept(this);
-		} else if (ctx->number()) {
+		} else if (ctx->arith_unary()) {
+            return ctx->arith_unary()->accept(this);
+        } else if (ctx->number()) {
 			return ctx->number()->accept(this);
 		} else if (ctx->real_variable()) {
 			return ctx->real_variable()->accept(this);
@@ -313,7 +335,7 @@ namespace carlparser {
 				baseExpr = boost::apply_visitor(perform_addition<ArithType, Pol>(), baseExpr, nextExpr);
 			}
 		} else if (text == "-") {
-			for(size_t i = 1; i < ctx->arith_expr().size(); ++i) {
+            for(size_t i = 1; i < ctx->arith_expr().size(); ++i) {
 				auto nextExpr = ctx->arith_expr(i)->accept(this);
 				baseExpr = boost::apply_visitor(perform_subtraction<ArithType, Pol>(), baseExpr, nextExpr.template as<ArithType>());
 			}
@@ -333,7 +355,22 @@ namespace carlparser {
 		return baseExpr;
 	}
 
-	template<typename Pol>
+    template<typename Pol>
+    antlrcpp::Any ParseTreeVisitor<Pol>::visitArith_unary(SerializationParser::Arith_unaryContext *ctx) {
+        auto const& text = ctx->token->getText();
+        auto baseExpr = ctx->arith_expr()->accept(this).template as<ArithType>();
+        if (text == "+") {
+			// Skip.
+        } else if (text == "-") {
+            baseExpr = boost::apply_visitor(perform_unary_subtraction<ArithType, Pol>(), baseExpr);
+        } else {
+            throw std::runtime_error("Unknown arithmetic operator");
+        }
+        return baseExpr;
+    }
+
+
+    template<typename Pol>
 	antlrcpp::Any ParseTreeVisitor<Pol>::visitBoolean(SerializationParser::BooleanContext *ctx) {
 		if (ctx->TRUE()) {
 			return carl::Formula<Pol>(FormulaType::TRUE);

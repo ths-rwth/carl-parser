@@ -4,17 +4,17 @@ dist: trusty
 
 cache:
   apt: true
+  directories:
+    - build/resources/
+    - carl/
 
 addons:
   apt:
     sources:
       - boost-latest
-      - george-edison55-precise-backports
       - ubuntu-toolchain-r-test
     packages:
       - libboost1.55-all-dev
-      - cmake
-      - cmake-data
       - g++-6
       - libcln-dev
       - libeigen3-dev
@@ -22,6 +22,7 @@ addons:
       - libgtest-dev
       - openjdk-7-jdk
       - time
+      - uuid-dev
 
 matrix:
   include:

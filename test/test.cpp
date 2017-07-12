@@ -1,7 +1,3 @@
-//
-// Created by Sebastian Junges on 28/06/2017.
-//
-
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
@@ -20,4 +16,9 @@ TEST_CASE("testing the parse") {
     DOCTEST_CHECK_EQ(check_type(res), carlparser::ParserReturnType::Polynomial);
     res = carlparser::deserialize<carl::MultivariatePolynomial<mpq_class>>("(< x 1)");
     DOCTEST_CHECK_EQ(check_type(res), carlparser::ParserReturnType::Constraint);
+    res = carlparser::deserialize<carl::MultivariatePolynomial<mpq_class>>("(<= (* (- 1) pL) 0)");
+    DOCTEST_CHECK_EQ(check_type(res), carlparser::ParserReturnType::Constraint);
+    res = carlparser::deserialize<carl::MultivariatePolynomial<mpq_class>>("(!= pK 0)");
+    DOCTEST_CHECK_EQ(check_type(res), carlparser::ParserReturnType::Constraint);
+
 }
