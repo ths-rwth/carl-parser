@@ -11,7 +11,7 @@ make lib_carl || return 1
 
 popd
 
-mkdir build
+mkdir -p build
 cd build/
 
 cmake ../
