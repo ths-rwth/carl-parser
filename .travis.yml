@@ -4,6 +4,9 @@ dist: trusty
 
 cache:
   apt: true
+  directories:
+    - build/resources/
+    - carl/
 
 addons:
   apt:

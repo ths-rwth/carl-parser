@@ -2,7 +2,6 @@
 
 pushd .
 
-cd ../
 git clone https://github.com/smtrat/carl.git
 mkdir -p carl/build
 cd carl/build/
@@ -15,7 +14,7 @@ popd
 mkdir build
 cd build/
 
-cmake -Dcarl_DIR=`pwd`/../../carl/build ../
+cmake ../
 make
 
 ./test/carl-parser-test

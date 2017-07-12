@@ -12,7 +12,6 @@ if [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
 	fi
 	
 	export PATH="$PREFIX/bin:$PATH"
-	cmake --version
 	
 elif [[ ${TRAVIS_OS_NAME} == "osx" ]]; then
 
