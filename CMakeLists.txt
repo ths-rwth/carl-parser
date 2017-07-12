@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(carl-parser)
-include(ExternalProject)
-SET_DIRECTORY_PROPERTIES(PROPERTIES EP_PREFIX ${CMAKE_BINARY_DIR}/resources)
 
 set(DYNAMIC_EXT ".so")
 set(STATIC_EXT ".a")
@@ -35,13 +33,21 @@ else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 
+# Require carl
 find_package(carl REQUIRED)
+
+# External projects
+include(ExternalProject)
+SET_DIRECTORY_PROPERTIES(PROPERTIES EP_PREFIX ${CMAKE_BINARY_DIR}/resources)
 set(ANTLR_VERSION "4.7")
 include(resources/antlr4.cmake)
-include(cmake/export_target.cmake)
 message(STATUS "Use shipped version of ANTLR ${ANTLR_VERSION}")
 
+# Add actual sources
 add_subdirectory(src)
+
+# tests
+enable_testing()
 add_subdirectory(test)
 
 # Add all targets to the build-tree export set
@@ -51,12 +57,11 @@ export(TARGETS ${EXPORT_TARGETS} FILE "${PROJECT_BINARY_DIR}/carlparserTargets.c
 message(STATUS "Registered with cmake")
 export(PACKAGE carlparser)
 
-export_target(DEP_TARGETS antlr4shared)
-
 set(INCLUDE_DIR include/)
-
 include(CMakePackageConfigHelpers)
+include(cmake/export_target.cmake)
 
+export_target(DEP_TARGETS antlr4shared)
 set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src")
 configure_package_config_file(
         cmake/carlparserConfig.cmake.in
@@ -64,4 +69,3 @@ configure_package_config_file(
         INSTALL_DESTINATION ${PROJECT_BINARY_DIR}
         PATH_VARS INCLUDE_DIR
 )
-
