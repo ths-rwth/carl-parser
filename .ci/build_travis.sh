@@ -2,7 +2,9 @@
 
 pushd .
 
-if [ ! -f carl/CMakeLists.txt ] ; then
+files=(carl/*)
+if [ ${#files[@]} -gt 0 ]; then
+	rm -r carl/
 	git clone https://github.com/smtrat/carl.git
 else
 	pushd carl/
