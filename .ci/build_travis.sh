@@ -2,7 +2,7 @@
 
 pushd .
 
-if [ ! -d carl/ ] ; then
+if [ ! -f carl/CMakeLists.txt ] ; then
 	git clone https://github.com/smtrat/carl.git
 else
 	pushd carl/
