@@ -10,7 +10,7 @@ cache:
   apt: true
   directories:
     - build/resources/
-    - carl/
+    - cache/
 
 addons:
   apt:

@@ -2,9 +2,11 @@
 
 pushd .
 
-files=(carl/*)
-if [ ${#files[@]} -gt 0 ]; then
-	rm -r carl/
+mkdir -p cache/
+
+pushd cache/
+
+if [! -d cache/carl ]; then
 	git clone https://github.com/smtrat/carl.git
 else
 	pushd carl/
@@ -17,6 +19,8 @@ mkdir -p carl/build
 pushd carl/build/
 cmake -D DEVELOPER=ON -D BUILD_ADDONS=OFF ../ || return 1
 make lib_carl || return 1
+popd
+
 popd
 
 
