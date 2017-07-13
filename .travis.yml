@@ -2,6 +2,10 @@ language: generic
 sudo: false
 dist: trusty
 
+branches:
+  except:
+    - /^deploy-.*$/
+
 cache:
   apt: true
   directories:
