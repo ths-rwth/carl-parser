@@ -46,4 +46,4 @@ script:
 deploy:
   provider: script
   skip_cleanup: true
-  script: sh .ci/deploy_travis.sh
+  script: bash .ci/deploy_travis.sh
