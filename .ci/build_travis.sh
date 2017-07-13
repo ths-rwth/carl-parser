@@ -6,7 +6,7 @@ mkdir -p cache/
 
 pushd cache/
 
-if [! -d cache/carl ]; then
+if [ ! -d cache/carl ]; then
 	git clone https://github.com/smtrat/carl.git
 else
 	pushd carl/
