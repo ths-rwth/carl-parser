@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
 
-BRANCH="deploy-`git rev-parse --short HEAD`"
+if [[ ${TASK} == "deploy" ]]; then
 
-echo $BRANCH
+	BRANCH="deploy-`git rev-parse --short HEAD`"
+	git checkout --orphan $BRANCH
 
-git remote add github https://${GH_TOKEN}@github.com/smtrat/carl-parser.git
+	git add .gitignore CMakeLists.txt README.md
+	git add cmake/ resources/ src/ test/
+	git add build/src/carl-parser/
 
-git checkout --orphan $BRANCH
+	git commit -m "Prebuild parser"
+	git tag -fa deploy-latest
 
-git add .gitignore CMakeLists.txt README.md
-git add cmake/ resources/ src/ test/
-git add build/src/carl-parser/
-
-git commit -m "Prebuild parser"
-
-git tag -fa deploy-latest
-
-git push github $BRANCH --tags
+	git remote add github https://${GH_TOKEN}@github.com/smtrat/carl-parser.git
+	git push github $BRANCH --tags
+fi
