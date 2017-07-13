@@ -24,6 +24,6 @@ cd build/
 cmake ../ || return 1
 make || return 1
 
-./test/carl-parser-test
+./test/carl-parser-test || return 1
 
 popd
