@@ -21,12 +21,6 @@ popd
 mkdir -p build
 cd build/
 
-cmake ../
-make
-
-./test/carl-parser-test
-
-# Second run
 cmake ../ || return 1
 make || return 1
 
