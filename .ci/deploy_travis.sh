@@ -10,8 +10,9 @@ if [[ ${TASK} == "deploy" ]]; then
 	git add build/src/carl-parser/
 
 	git commit -m "Prebuild parser"
+	echo "Creating tag"
 	git tag -fa deploy-latest
-
+	echo "Pushing to new remote"
 	git remote add github https://${GH_TOKEN}@github.com/smtrat/carl-parser.git
 	git push github $BRANCH --tags
 fi
