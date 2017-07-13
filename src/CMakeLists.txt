@@ -33,7 +33,7 @@ function(create_antlr_targets)
                         OUTPUT ${generated_sources}
                         COMMAND ${CMAKE_COMMAND} -E make_directory ${DESTDIR}
                         COMMAND ${Java_JAVA_EXECUTABLE} -jar ${ANTLR_JAR} -Werror -Dlanguage=Cpp -listener -visitor -o ${DESTDIR} -package carlparser ${file}
-                        DEPENDS ${file}
+                        DEPENDS ${file} ANTLR-jar
                         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src
                 )
         endforeach()
