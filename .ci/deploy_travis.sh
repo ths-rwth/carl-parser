@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ ${TASK} == "deploy" ]]; then
+if [[ ${TASK} == "DEPLOY" ]]; then
 
 	BRANCH="deploy-`git rev-parse --short HEAD`"
 	git checkout --orphan $BRANCH
