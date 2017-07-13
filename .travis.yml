@@ -44,6 +44,6 @@ script:
   - source .ci/build_travis.sh
 
 deploy:
+  provider: script
   skip_cleanup: true
-  - provider: script
-    script: .ci/deploy_travis.sh
+  script: .ci/deploy_travis.sh
