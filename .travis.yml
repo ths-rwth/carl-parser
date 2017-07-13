@@ -38,3 +38,7 @@ before_install:
 
 script:
   - source .ci/build_travis.sh
+
+deploy:
+  - provider: script
+    script: .ci/deploy_travis.sh
