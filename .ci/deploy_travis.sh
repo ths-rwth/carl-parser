@@ -7,7 +7,7 @@ if [[ ${TASK} == "DEPLOY" ]]; then
 
 	git add .gitignore CMakeLists.txt README.md
 	git add cmake/ resources/ src/ test/
-	git add build/src/carl-parser/
+	git add -f build/src/carl-parser/
 
 	git commit -m "Prebuild parser"
 	echo "Creating tag"
