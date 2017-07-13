@@ -15,12 +15,23 @@ ExternalProject_Add(
         GIT_TAG "rpath_fix"
         BUILD_IN_SOURCE 1
         UPDATE_COMMAND ""
-        CONFIGURE_COMMAND mvn clean
-        BUILD_COMMAND mvn -DskipTests package -pl tool -am
+	CONFIGURE_COMMAND ""
+	BUILD_COMMAND ""
         INSTALL_COMMAND ""
 )
 
 ExternalProject_Get_Property(ANTLR SOURCE_DIR)
+
+ExternalProject_Add(
+        ANTLR-jar
+	DOWNLOAD_COMMAND ""
+	SOURCE_DIR "${SOURCE_DIR}"
+        BUILD_IN_SOURCE 1
+        UPDATE_COMMAND ""
+        CONFIGURE_COMMAND mvn clean
+        BUILD_COMMAND mvn -DskipTests package -pl tool -am
+        INSTALL_COMMAND ""
+)
 
 set(ANTLR_JAR "${SOURCE_DIR}/tool/target/antlr4-${ANTLR_VERSION}-complete.jar")
 set(ANTLR-runtime_TARGETS "antlr4_shared")
@@ -45,6 +56,7 @@ set_target_properties(antlr4shared PROPERTIES IMPORTED_LOCATION ${INSTALL_DIR}/l
 
 set_target_properties(antlr4shared PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${INSTALL_DIR}/include;${INSTALL_DIR}/include/antlr4-runtime")
 
+add_dependencies(ANTLR-jar ANTLR)
 add_dependencies(ANTLR-runtime ANTLR)
 add_dependencies(antlr4shared ANTLR-runtime)
 
