@@ -8,7 +8,7 @@ if [[ ${TASK} == "DEPLOY" ]]; then
 	git add .gitignore CMakeLists.txt README.md
 	git add cmake/ resources/ src/ test/
 	git add -f build/src/carl-parser/
-	git add -f build/resources/src/ANTLR/tool/target/antlr4-*-complete.jar
+	git add -f build/resources/lib/antlr4-*-complete.jar
 
 	git commit -m "Prebuild parser"
 	git tag -fa deploy-latest -m "latest version"

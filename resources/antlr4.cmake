@@ -21,6 +21,7 @@ ExternalProject_Add(
 )
 
 ExternalProject_Get_Property(ANTLR SOURCE_DIR)
+ExternalProject_Get_Property(ANTLR INSTALL_DIR)
 
 ExternalProject_Add(
         ANTLR-jar
@@ -30,10 +31,10 @@ ExternalProject_Add(
         UPDATE_COMMAND ""
         CONFIGURE_COMMAND mvn clean
         BUILD_COMMAND mvn -DskipTests package -pl tool -am
-        INSTALL_COMMAND ""
+        INSTALL_COMMAND cp tool/target/antlr4-${ANTLR_VERSION}-complete.jar <INSTALL_DIR>/lib/
 )
 
-set(ANTLR_JAR "${SOURCE_DIR}/tool/target/antlr4-${ANTLR_VERSION}-complete.jar")
+set(ANTLR_JAR "${INSTALL_DIR}/lib/antlr4-${ANTLR_VERSION}-complete.jar")
 set(ANTLR-runtime_TARGETS "antlr4_shared")
 
 ExternalProject_Add(
