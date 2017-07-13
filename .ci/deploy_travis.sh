@@ -13,4 +13,7 @@ git add cmake/ resources/ src/ test/
 git add build/src/carl-parser/
 
 git commit -m "Prebuild parser"
-git push github $BRANCH
+
+git tag -fa deploy-latest
+
+git push github $BRANCH --tags
