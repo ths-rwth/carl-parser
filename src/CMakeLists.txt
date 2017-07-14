@@ -10,6 +10,11 @@ function(create_antlr_targets)
 
         set(ANTLR_generated_include "" PARENT_SCOPE)
         set(ANTLR_generated_sources "" PARENT_SCOPE)
+		
+		add_custom_command(OUTPUT ${ANTLR_JAR}
+			COMMAND ${CMAKE_COMMAND} --build . --target ANTLR-jar
+			WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+		)
 
         foreach(file ${antlr_grammars})
                 get_filename_component(DIR ${file} DIRECTORY)
