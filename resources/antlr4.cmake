@@ -25,6 +25,7 @@ ExternalProject_Get_Property(ANTLR INSTALL_DIR)
 
 ExternalProject_Add(
 	ANTLR-jar
+	EXCLUDE_FROM_ALL 1
 	DOWNLOAD_COMMAND ""
 	SOURCE_DIR "${SOURCE_DIR}"
 	BUILD_IN_SOURCE 1
