@@ -9,6 +9,7 @@ branches:
 cache:
   apt: true
   directories:
+    - $HOME/usr/
     - build/resources/
     - cache/
 
