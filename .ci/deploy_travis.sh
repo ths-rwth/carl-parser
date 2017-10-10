@@ -17,7 +17,7 @@ if [[ ${TASK} == "DEPLOY" ]]; then
 	git push github $BRANCH --tags --force
 fi
 
-for branch in `git branch -a --sort=committerdate --format='%(refname:short)'`
+for branch in `git for-each-ref --sort=committerdate --format='%(refname:short)'`
 do
 	# Avoid deleting branches other than deploy-<commitid>
 	if [[ ! "$branch" =~ ^origin/deploy-[0-9a-f]+$ ]]; then
