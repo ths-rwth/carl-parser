@@ -16,7 +16,7 @@ function(create_antlr_targets)
                 file(RELATIVE_PATH DIR ${CMAKE_SOURCE_DIR}/src "${DIR}")
                 get_filename_component(FILENAME ${file} NAME)
                 get_filename_component(GRAMMAR ${file} NAME_WE)
-                set(DESTDIR "${CMAKE_BINARY_DIR}/src/${DIR}")
+                set(DESTDIR "${CMAKE_SOURCE_DIR}/src/generated/${DIR}")
 
                 # https://github.com/antlr/antlr4/blob/master/doc/cpp-target.md
                 set(generated_sources
@@ -37,7 +37,7 @@ function(create_antlr_targets)
                         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src
                 )
         endforeach()
-        set(ANTLR_generated_include ${ANTLR_generated_include} "${CMAKE_BINARY_DIR}/src" PARENT_SCOPE)
+        set(ANTLR_generated_include ${ANTLR_generated_include} "${CMAKE_SOURCE_DIR}/src/generated/" PARENT_SCOPE)
         set(ANTLR_generated_sources ${ANTLR_generated_sources} "${generated_sources}" PARENT_SCOPE)
 
 endfunction()
