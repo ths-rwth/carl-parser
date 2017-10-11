@@ -16,6 +16,6 @@ if [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
 elif [[ ${TRAVIS_OS_NAME} == "osx" ]]; then
 
 	brew update --quiet
-	brew install cln cmake doxygen eigen llvm
+	brew install cln doxygen eigen llvm
 
 fi
