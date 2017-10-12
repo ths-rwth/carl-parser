@@ -30,6 +30,10 @@ cd build/
 cmake ../ || return 1
 make || return 1
 
+# Build a second time to avoid problems in macOS
+cmake ../ || return 1
+make || return 1
+
 ./test/carl-parser-test || return 1
 
 popd
