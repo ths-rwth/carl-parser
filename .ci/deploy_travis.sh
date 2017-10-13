@@ -19,6 +19,7 @@ if [[ ${TASK} == "DEPLOY" ]]; then
 	git for-each-ref --sort=committerdate --format='%(refname:short)'
 
 	git fetch --unshallow
+	git fetch --tags
 	
 	git for-each-ref --sort=committerdate --format='%(refname:short)'
 
