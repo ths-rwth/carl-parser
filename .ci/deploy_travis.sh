@@ -16,12 +16,8 @@ if [[ ${TASK} == "DEPLOY" ]]; then
 	git remote add github https://${GH_TOKEN}@github.com/smtrat/carl-parser.git
 	git push github $BRANCH --tags --force
 	
-	git for-each-ref --sort=committerdate --format='%(refname:short)'
-
+	git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
 	git fetch --unshallow
-	git fetch --tags
-	
-	git for-each-ref --sort=committerdate --format='%(refname:short)'
 
 	for branch in `git for-each-ref --sort=committerdate --format='%(refname:short)'`
 	do
