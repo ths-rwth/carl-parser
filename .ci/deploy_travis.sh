@@ -16,13 +16,13 @@ if [[ ${TASK} == "DEPLOY" ]]; then
 	git remote add github https://${GH_TOKEN}@github.com/smtrat/carl-parser.git
 	git push github $BRANCH --tags --force
 	
-	git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
-	git fetch --unshallow
+	git config remote.github.fetch +refs/heads/*:refs/remotes/github/*
+	git fetch --unshallow github
 
 	for branch in `git for-each-ref --sort=committerdate --format='%(refname:short)'`
 	do
 		# Avoid deleting branches other than deploy-<commitid>
-		if [[ ! "$branch" =~ ^origin/deploy-[0-9a-f]+$ ]]; then
+		if [[ ! "$branch" =~ ^github/deploy-[0-9a-f]+$ ]]; then
 			continue
 		fi
 		
