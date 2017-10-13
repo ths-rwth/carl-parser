@@ -10,6 +10,7 @@ cache:
   apt: true
   directories:
     - $HOME/usr/
+    - build/resources
 
 addons:
   apt:
