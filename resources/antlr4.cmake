@@ -32,11 +32,9 @@ ExternalProject_Add(
 	UPDATE_COMMAND ""
 	CONFIGURE_COMMAND mvn clean
 	BUILD_COMMAND mvn -DskipTests package -pl tool -am
-	INSTALL_COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/lib/
-	COMMAND cp tool/target/antlr4-${ANTLR_VERSION}-complete.jar ${CMAKE_SOURCE_DIR}/lib/
+	INSTALL_COMMAND ""
 )
 
-set(ANTLR_JAR "${CMAKE_SOURCE_DIR}/lib/antlr4-${ANTLR_VERSION}-complete.jar")
 set(ANTLR-runtime_TARGETS "antlr4_shared")
 
 ExternalProject_Add(
