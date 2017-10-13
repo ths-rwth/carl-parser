@@ -41,6 +41,6 @@ if [[ ${TASK} == "DEPLOY" ]]; then
 		fi
 		
 		echo "Deleting $branch..."
-		git push origin --delete $branch
+		git push github --delete $branch
 	done
 fi
