@@ -17,7 +17,7 @@ if [[ ${TASK} == "DEPLOY" ]]; then
 	git push github $BRANCH --tags --force
 fi
 
-git for-each-ref --sort=committerdate --format='%(refname:short)'
+git fetch --unshallow
 
 for branch in `git for-each-ref --sort=committerdate --format='%(refname:short)'`
 do
