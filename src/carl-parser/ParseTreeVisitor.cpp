@@ -416,7 +416,7 @@ namespace carlparser {
 		Variable res = pool.findVariableWithName(name);
 		if (res != Variable::NO_VARIABLE) {
 			newVar = res;
-			if (newVar.getType() != VariableType::VT_BOOL) {
+			if (newVar.type() != VariableType::VT_BOOL) {
 				throw std::runtime_error("Expected Boolean variable");
 			}
 		} else {
@@ -435,7 +435,7 @@ namespace carlparser {
 		Variable res = pool.findVariableWithName(name);
 		if (res != Variable::NO_VARIABLE) {
 			newVar = res;
-			if (newVar.getType() != VariableType::VT_REAL) {
+			if (newVar.type() != VariableType::VT_REAL) {
 				throw std::runtime_error("Expected real variable");
 			}
 		} else {

@@ -85,7 +85,7 @@ std::string serialize(Constraint<Poly> const& c) {
 
 template <typename Poly>
 std::string serialize(Formula<Poly> const& f) {
-	switch(f.getType()) {
+	switch(f.type()) {
 		case ITE:
 			return std::string("(ite ") + serialize(f.subformulas()[0]) +
 					' ' + serialize(f.subformulas()[1]) +
@@ -102,7 +102,7 @@ std::string serialize(Formula<Poly> const& f) {
 		case FormulaType::OR:
 		case FormulaType::XOR:
 		case FormulaType::IFF: {
-			std::string res = "(" + formulaTypeToString(f.getType());
+			std::string res = "(" + formulaTypeToString(f.type());
 			for (auto const &sub: f) {
 				res += ' ' + serialize(sub);
 			}
