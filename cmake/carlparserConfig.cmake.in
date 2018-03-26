@@ -1,0 +1,12 @@
+## Our library dependencies (contains definitions for IMPORTED targets)
+
+include("@PROJECT_BINARY_DIR@/carlparserTargets.cmake")
+
+@DEP_TARGETS@
+
+@PACKAGE_INIT@
+
+set(carlparser_INCLUDE_DIR "@CONF_INCLUDE_DIRS@")
+
+set(carlparser_LIBRARIES carl-parser)
+check_required_components(carlparser)
