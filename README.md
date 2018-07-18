@@ -26,8 +26,20 @@ You can run tests with
 test/carl-parser-test
 ```
 
+### Frequent errors
+
+On MacOSX, there is a known problem with the rpath, which might lead to an error when executing the tests.
+The problem can be alleviated by running both 
+
+```bash
+cmake ..
+make
+```
+
+again. 
+
 ### Authors:
 
-Harold Bruintjes
-Sebastian Junges
-Gereon Kremer
+- Harold Bruintjes
+- Sebastian Junges
+- Gereon Kremer
