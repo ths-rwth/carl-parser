@@ -23,9 +23,12 @@ addons:
       - libeigen3-dev
       - libgmp-dev
       - libgtest-dev
-      - openjdk-7-jdk
       - time
       - uuid-dev
+  homebrew:
+    packages:
+      - cln
+      - eigen
 
 matrix:
   include:
@@ -34,9 +37,6 @@ matrix:
     - os: osx
       env: CC=clang CXX=clang++
 
-
-before_install:
-  - cd .ci/ && source setup_travis.sh && cd ../
 
 script:
   - source .ci/build_travis.sh

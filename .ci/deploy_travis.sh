@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ ${TASK} == "DEPLOY" ]]; then
-
+if [[ ${TASK} == "DEPLOY" && ${TRAVIS_BRANCH} == "master14" ]]; then
 	BRANCH="deploy-`git rev-parse --short HEAD`"
 	git checkout --orphan $BRANCH
 
