@@ -23,17 +23,19 @@ ExternalProject_Add(
 ExternalProject_Get_Property(ANTLR SOURCE_DIR)
 ExternalProject_Get_Property(ANTLR INSTALL_DIR)
 
-ExternalProject_Add(
-	ANTLR-jar
-	EXCLUDE_FROM_ALL 1
-	DOWNLOAD_COMMAND ""
-	SOURCE_DIR "${SOURCE_DIR}"
-	BUILD_IN_SOURCE 1
-	UPDATE_COMMAND ""
-	CONFIGURE_COMMAND mvn clean
-	BUILD_COMMAND mvn -DskipTests package -pl tool -am
-	INSTALL_COMMAND ""
-)
+if (BUILT_JAR)
+	ExternalProject_Add(
+		ANTLR-jar
+		EXCLUDE_FROM_ALL 1
+		DOWNLOAD_COMMAND ""
+		SOURCE_DIR "${SOURCE_DIR}"
+		BUILD_IN_SOURCE 1
+		UPDATE_COMMAND ""
+		CONFIGURE_COMMAND mvn clean
+		BUILD_COMMAND mvn -DskipTests package -pl tool -am
+		INSTALL_COMMAND ""
+	)
+endif()
 
 set(ANTLR-runtime_TARGETS "antlr4_shared")
 
@@ -61,7 +63,9 @@ add_library(antlr4static STATIC IMPORTED GLOBAL)
 set_target_properties(antlr4static PROPERTIES IMPORTED_LOCATION ${INSTALL_DIR}/lib/libantlr4-runtime${STATIC_EXT})
 set_target_properties(antlr4static PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${INSTALL_DIR}/include;${INSTALL_DIR}/include/antlr4-runtime")
 
-add_dependencies(ANTLR-jar ANTLR)
+if (USE_SHIPPED_JAR)
+	add_dependencies(ANTLR-jar ANTLR)
+endif()
 add_dependencies(ANTLR-runtime ANTLR)
 add_dependencies(antlr4shared ANTLR-runtime)
 add_dependencies(antlr4static ANTLR-runtime)

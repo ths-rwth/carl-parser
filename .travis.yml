@@ -1,6 +1,6 @@
 language: generic
 sudo: false
-dist: trusty
+dist: xenial
 
 branches:
   except:
@@ -15,30 +15,25 @@ cache:
 addons:
   apt:
     sources:
-      - boost-latest
       - ubuntu-toolchain-r-test
     packages:
-      - libboost1.55-all-dev
-      - g++-6
+      - g++-7
+      - libboost-all-dev
       - libcln-dev
       - libeigen3-dev
-      - libgmp-dev
       - libgtest-dev
-      - openjdk-7-jdk
-      - time
-      - uuid-dev
+  homebrew:
+    packages:
+      - cln
+      - eigen
 
 matrix:
   include:
     - os: linux
-      env: CC=gcc-6 CXX=g++-6 TASK=DEPLOY
+      env: CC=gcc-7 CXX=g++-7 TASK=DEPLOY
     - os: osx
-      osx_image: xcode8.3
       env: CC=clang CXX=clang++
 
-
-before_install:
-  - cd .ci/ && source setup_travis.sh && cd ../
 
 script:
   - source .ci/build_travis.sh
