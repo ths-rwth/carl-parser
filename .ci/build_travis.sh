@@ -22,7 +22,11 @@ fi
 mkdir -p carl/build
 pushd carl/build/
 cmake -D DEVELOPER=ON -D BUILD_ADDONS=OFF ../ || return 1
-make lib_carl || return 1
+if [ ${TRAVIS_BRANCH} == "master14" ]; then
+    make lib_carl || return 1
+else
+    make carl || return 1
+fi
 popd
 
 popd
