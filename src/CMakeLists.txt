@@ -11,18 +11,13 @@ function(create_antlr_targets)
         set(ANTLR_generated_include "" PARENT_SCOPE)
         set(ANTLR_generated_sources "" PARENT_SCOPE)
 
-		set(ANTLR_JAR "${CMAKE_SOURCE_DIR}/lib/antlr4-${ANTLR_VERSION}-complete.jar")
+		set(ANTLR_JAR "${PROJECT_SOURCE_DIR}/resources/lib/antlr-${ANTLR_VERSION}-complete.jar")
 
 		if (BUILT_JAR)
 			add_custom_command(OUTPUT ${ANTLR_JAR}
 				COMMAND ${CMAKE_COMMAND} --build . --target ANTLR-jar
 				COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/lib/
 				COMMAND cp ${SOURCE_DIR}/tool/target/antlr4-${ANTLR_VERSION}-complete.jar ${ANTLR_JAR}
-				WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-			)
-		else()
-			add_custom_command(OUTPUT ${ANTLR_JAR}
-				COMMAND cp ${PROJECT_SOURCE_DIR}/resources/lib/antlr-${ANTLR_VERSION}-complete.jar ${ANTLR_JAR}
 				WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 			)
 		endif()
