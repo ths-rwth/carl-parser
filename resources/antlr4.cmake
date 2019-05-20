@@ -23,7 +23,7 @@ ExternalProject_Add(
 ExternalProject_Get_Property(ANTLR SOURCE_DIR)
 ExternalProject_Get_Property(ANTLR INSTALL_DIR)
 
-if (BUILT_JAR)
+if (BUILD_JAR)
 	ExternalProject_Add(
 		ANTLR-jar
 		EXCLUDE_FROM_ALL 1

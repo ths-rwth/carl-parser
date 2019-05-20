@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(carl-parser)
 
-option(BUILT_JAR "Built antlr jar file" OFF)
+option(BUILD_JAR "Built antlr jar file" OFF)
 
 set(DYNAMIC_EXT ".so")
 set(STATIC_EXT ".a")
@@ -55,7 +55,7 @@ include(ExternalProject)
 SET_DIRECTORY_PROPERTIES(PROPERTIES EP_PREFIX ${CMAKE_BINARY_DIR}/resources)
 
 set(ANTLR_VERSION "4.7.2")
-if (BUILT_JAR)
+if (BUILD_JAR)
     message(STATUS "Built jar file of ANTLR ${ANTLR_VERSION}")
 else()
     message(STATUS "Use shipped jar file of ANTLR ${ANTLR_VERSION}")
