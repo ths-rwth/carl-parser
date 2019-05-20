@@ -7,7 +7,11 @@ mkdir -p cache/
 pushd cache/
 
 if [ ! -d cache/carl ]; then
-	git clone https://github.com/smtrat/carl.git
+    if [ "$TRAVIS_BRANCH" == "master14" ]; then
+        git clone https://github.com/smtrat/carl.git --branch master14
+    else
+        git clone https://github.com/smtrat/carl.git
+    fi
 else
 	pushd carl/
 	git fetch

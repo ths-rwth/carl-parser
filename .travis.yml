@@ -19,7 +19,7 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - libboost1.55-all-dev
-      - g++-6
+      - g++-7
       - libcln-dev
       - libeigen3-dev
       - libgmp-dev
@@ -31,9 +31,8 @@ addons:
 matrix:
   include:
     - os: linux
-      env: CC=gcc-6 CXX=g++-6 TASK=DEPLOY
+      env: CC=gcc-7 CXX=g++-7 TASK=DEPLOY
     - os: osx
-      osx_image: xcode8.3
       env: CC=clang CXX=clang++
 
 
