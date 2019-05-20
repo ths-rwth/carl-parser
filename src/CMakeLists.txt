@@ -13,7 +13,7 @@ function(create_antlr_targets)
 
 		set(ANTLR_JAR "${PROJECT_SOURCE_DIR}/resources/lib/antlr-${ANTLR_VERSION}-complete.jar")
 
-		if (BUILT_JAR)
+		if (BUILD_JAR)
 			add_custom_command(OUTPUT ${ANTLR_JAR}
 				COMMAND ${CMAKE_COMMAND} --build . --target ANTLR-jar
 				COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/lib/
