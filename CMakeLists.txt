@@ -49,6 +49,9 @@ endif()
 
 # Require carl
 find_package(carl REQUIRED)
+# Output information about carl
+get_target_property(carlLOCATION lib_carl LOCATION)
+message(STATUS "Using carl ${carl_VERSION} from ${carlLOCATION}.")
 
 # External projects
 include(ExternalProject)
