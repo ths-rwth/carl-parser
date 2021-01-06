@@ -91,3 +91,8 @@ configure_package_config_file(
         INSTALL_DESTINATION ${PROJECT_BINARY_DIR}
         PATH_VARS INCLUDE_DIR
 )
+
+
+if (APPLE)
+    message(WARNING "If tests are unsuccessful or errors occur, try running 'cmake ..' and 'make' once again.")
+endif()
