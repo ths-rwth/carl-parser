@@ -11,7 +11,7 @@ The parser requires the following tools:
 
 ### Building
 
-To build, first install CArL. Then build carl-parser with
+To build, first [install CArL](https://smtrat.github.io/carl/). Then build carl-parser with
 
 ```bash
 mkdir build
