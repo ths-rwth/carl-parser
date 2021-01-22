@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(carl-parser)
 
-option(BUILD_JAR "Built antlr jar file" OFF)
+option(BUILD_JAR "Built ANTLR jar file" OFF)
 
 set(DYNAMIC_EXT ".so")
 set(STATIC_EXT ".a")
